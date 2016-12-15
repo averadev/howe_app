@@ -121,7 +121,8 @@ local dbManager = {}
 		
         -- Populate config
 		--query = "INSERT INTO config VALUES (1, 0, '', '', '', '', 0, 'http://www.plantecsafe.com/');"
-		query = "INSERT INTO config VALUES (1, 0, '', '', '', '', 0, 'http://localhost:8080/howe_ws/');"
+		--query = "INSERT INTO config VALUES (1, 0, '', '', '', '', 0, 'http://localhost:8080/howe_ws/');"
+		query = "INSERT INTO config VALUES (1, 0, '', '', '', '', 0, 'http://geekbucket.com.mx/howe_ws/');"
 		
 		db:exec( query )
     

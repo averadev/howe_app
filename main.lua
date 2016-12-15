@@ -6,13 +6,15 @@
 
 -- Your code here
 
+display.setStatusBar( display.TranslucentStatusBar )
+
 local composer = require( "composer" )
 local DBManager = require('src.resources.DBManager')
 
 local isUser = DBManager.setupSquema()
 
 if not isUser then
-	composer.gotoScene("src.Login")
+	composer.gotoScene("src.UserType")
 else
-	composer.gotoScene("src.Messages")
+	composer.gotoScene("src.Home")
 end

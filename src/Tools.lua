@@ -44,7 +44,7 @@ function Tools:new()
 		if ( currScene == "src.SignIn" ) then
 			local iconBack = display.newImage("img/btn/regresar.png")
 			iconBack:translate( 40 , 35 )
-			iconBack.screen = "login"
+			iconBack.screen = "Login"
 			self:insert( iconBack )
 			iconBack.height = 40
 			iconBack.width = 40
@@ -81,9 +81,12 @@ function Tools:new()
 
 		local iconHome = display.newImage("img/btn/regresar.png")
 		iconHome:translate( 40 , 35 + lastY )
-		self:insert( iconHome )
+		iconHome.screen = "Home"
 		iconHome.height = 40
 		iconHome.width = 40
+		self:insert( iconHome )
+		iconHome:addEventListener( 'tap', toScreen )
+		
 		
         local lblLogo = display.newText({
 			text = "RESIDENCIAL ALBORADA",
@@ -130,7 +133,7 @@ function Tools:new()
 		
 		local lastY = 0
 		
-		local optionTool = { "GuardAssigned", "Messages", "visit", "report", "invitation", "pass", "alert" }
+		local optionTool = { "GuardAssigned", "Messages", "Visit", "Report", "Invitation", "Pass", "Alert" }
 		local iconTool = { "guardia.png", "message.png", "vistas.png", "reportes.png", "invitaciones.png", "pases.png", "alert.png" }
 		local optionLabel = { "GUARDIA EN TURNO", "MENSAJES", "VISITAS", "REPORTES", "INVITACIONES", "PASES", "EMITIR ALERTA" }
 		local optionSubLabel = { "Comunicáte a Caseta", "Enviar mensaje a Administración", "Agenda y Solicita visitas programadas", 
@@ -203,7 +206,7 @@ function Tools:new()
 		lineScv.alpha = .6
 		self:insert(lineScv)
 		
-		local optionTool = { "GuardAssigned", "Messages", "visit", "report", "invitation", "pass", "alert" }
+		local optionTool = { "GuardAssigned", "Messages", "Visit", "Report", "Invitation", "Pass", "Alert" }
 		local iconTool = { "guardia.png", "message.png", "vistas.png", "reportes.png", "invitaciones.png", "pases.png", "alert.png" }
 		local optionLabel = { "GUARDIA EN TURNO", "MENSAJES", "VISITAS", "REPORTES", "INVITACIONES", "PASES", "EMITIR ALERTA" }
 		local optionSubLabel = { "Comunicáte a Caseta", "Enviar mensaje a Administración", "Agenda y Solicita visitas programadas", 
@@ -271,9 +274,12 @@ function Tools:new()
     
     -- Cambia pantalla
     function toScreen(event)
-        local t = event.target
-		composer.removeScene( "src."..t.screen )
-		composer.gotoScene("src."..t.screen )
+		local t = event.target
+		local currScene = composer.getSceneName( "current" )
+		if not ( currScene == "src."..t.screen ) then
+			composer.removeScene( "src."..t.screen )
+			composer.gotoScene("src."..t.screen )
+		end
         --composer.gotoScene("src."..t.screen, { time = 400, effect = t.animation, params = { item = t.item } } )
         return true
     end

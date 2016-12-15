@@ -34,7 +34,11 @@ function gotoScreen( event )
 	
 	t.alpha = .75
 	
-	timer.performWithDelay( 100, function() t.alpha = 1  end )
+	timer.performWithDelay( 100, function()
+		t.alpha = 1  
+		composer.removeScene("src.Home")
+		composer.gotoScene("src.Home")
+	end )
 	
 	return true
 end

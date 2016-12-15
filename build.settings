@@ -52,6 +52,7 @@ settings =
 				"Icon-Small-50.png",
 				"Icon-Small-50@2x.png",
 			},
+			CoronaWindowMovesWhenKeyboardAppears = true,
 		},
 	},
 	
@@ -64,5 +65,6 @@ settings =
 		{
 			"android.permission.INTERNET",
 		},
+		coronaWindowMovesWhenKeyboardAppears = true,
 	},
 }

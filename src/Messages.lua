@@ -46,12 +46,14 @@ function setItemsNotiAdmin( items )
 	if #items > 0 then
 		itemsAdmin = items
 		buildMensageItems()
-		--deleteLoadingLogin()
 	else
 		getNoContent(svMessage,'En este momento no cuentas con mensajes')
-		--deleteLoadingLogin()
 	end
 	
+end
+
+function noMessages(message)
+	getNoContent( svMessage, message )
 end
 
 --muestra y/o oculta el boton de eliminar visitas
@@ -101,8 +103,6 @@ function refreshMessageAdmin()
 end
 
 function markReadAdmin( event )
-
-	print( event.target.id)
 	
 	event.target:removeEventListener('tap', markReadAdmin)
 	

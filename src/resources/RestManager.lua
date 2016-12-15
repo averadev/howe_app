@@ -194,9 +194,8 @@ local RestManager = {}
         local url = dbConfig.url
         url = url.."api/getLastGuard/format/json"
         url = url.."/idApp/"..dbConfig.idApp
-		--url = url.."/condominioId/"..dbConfig.condominioId
-		url = url.."/condominioId/"..50
-	
+		url = url.."/condominioId/"..dbConfig.condominioId
+		
         local function callback(event)
             if ( event.isError ) then
 				paintGuardDefault()
@@ -238,14 +237,23 @@ local RestManager = {}
 	
         local function callback(event)
             if ( event.isError ) then
+				noMessages("Problemas con el servidor, intente mas tarde :(")
             else
                 local data = json.decode(event.response)
-				if data.success then
-					local items = data.items
-					setItemsNotiAdmin(items)
-                else
-					native.showAlert( "Plantec Resident", data.message, { "OK"})
-                end
+				if data then
+					if data.success then
+						local items = data.items
+						setItemsNotiAdmin(items)
+					else
+						if data.message then
+							noMessages(data.message)
+						else
+							noMessages("Problemas con el servidor, intente mas tarde :(")
+						end
+					end
+				else
+					noMessages("Problemas con el servidor, intente mas tarde :(")
+				end
             end
             return true
         end

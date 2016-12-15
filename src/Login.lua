@@ -40,8 +40,8 @@ end
 function goToHome()
 	btnLogin:addEventListener( 'tap', gotoLogin)
 	btnLogin.alpha = 1
-	composer.removeScene("src.Home")
-	composer.gotoScene("src.Home")
+	composer.removeScene("src.Welcome")
+	composer.gotoScene("src.Welcome")
 end
 
 function errorLogin()
