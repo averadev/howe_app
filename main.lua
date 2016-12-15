@@ -14,5 +14,5 @@ local isUser = DBManager.setupSquema()
 if not isUser then
 	composer.gotoScene("src.Login")
 else
-	composer.gotoScene("src.GuardAssigned")
+	composer.gotoScene("src.Messages")
 end

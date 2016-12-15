@@ -128,12 +128,9 @@ function Tools:new()
 		lineScv.alpha = .6
 		self:insert(lineScv)
 		
-		local optionTool = { "GuardAssigned", "message", "visit", "report", "invitation", "pass", "alert" }
-		local iconnTool = { "guardia.png", "message.png", "vistas.png", "reportes.png", "invitaciones.png", "pases.png", "alert.png" }
-		
 		local lastY = 0
 		
-		local optionTool = { "GuardAssigned", "message", "visit", "report", "invitation", "pass", "alert" }
+		local optionTool = { "GuardAssigned", "Messages", "visit", "report", "invitation", "pass", "alert" }
 		local iconTool = { "guardia.png", "message.png", "vistas.png", "reportes.png", "invitaciones.png", "pases.png", "alert.png" }
 		local optionLabel = { "GUARDIA EN TURNO", "MENSAJES", "VISITAS", "REPORTES", "INVITACIONES", "PASES", "EMITIR ALERTA" }
 		local optionSubLabel = { "Comunicáte a Caseta", "Enviar mensaje a Administración", "Agenda y Solicita visitas programadas", 
@@ -150,6 +147,14 @@ function Tools:new()
 			bg0:setFillColor( unpack(cDarkBlue) )
 			scvToolbar:insert(bg0)
 			bg0:addEventListener( 'tap', toScreen )
+			
+			print()
+			
+			local currScene = composer.getSceneName( "current" )
+			if currScene == "src." .. optionTool[i] then
+				--bg0:setFillColor( unpack(cWhite) )
+				bg0.fill = gGreenBlue
+			end
 			
 			local icon0 = display.newImage("img/btn/" .. iconTool[i])
 			icon0:translate( 40 , lastY + 50 )
@@ -198,7 +203,7 @@ function Tools:new()
 		lineScv.alpha = .6
 		self:insert(lineScv)
 		
-		local optionTool = { "GuardAssigned", "message", "visit", "report", "invitation", "pass", "alert" }
+		local optionTool = { "GuardAssigned", "Messages", "visit", "report", "invitation", "pass", "alert" }
 		local iconTool = { "guardia.png", "message.png", "vistas.png", "reportes.png", "invitaciones.png", "pases.png", "alert.png" }
 		local optionLabel = { "GUARDIA EN TURNO", "MENSAJES", "VISITAS", "REPORTES", "INVITACIONES", "PASES", "EMITIR ALERTA" }
 		local optionSubLabel = { "Comunicáte a Caseta", "Enviar mensaje a Administración", "Agenda y Solicita visitas programadas", 

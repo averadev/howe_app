@@ -31,6 +31,10 @@ local first = 0
 -- FUNCIONES
 ---------------------------------------------------------------------------------
 
+------------------------------------------
+-- @todo carga los datos del guardia
+-- @param item datos obtenidos de WS
+------------------------------------------
 function setElementGuard(item)
 
 	if #item > 0 then
@@ -42,17 +46,10 @@ function setElementGuard(item)
 	
 end
 
+---------------------------------------------------
+-- @todo desgarga la imagen del guardia en turno
+---------------------------------------------------
 function loadImageGuard()
-	local json = require( "json" )
-	--itemsGuard.foto = "hola.jpg"
-	--[[local nameImg
-	for k, v in string.gmatch( itemsGuard.foto, "(%w+).(%w+)" ) do
-		nameImg = k
-		extImg = v
-		print(extImg)
-	end]]
-	
-	--print(itemsGuard.foto)
 	
 	local extImg = itemsGuard.extension
 
@@ -72,13 +69,6 @@ function loadImageGuard()
 					first = 1
 				end
 			end
-		
-			--event.target.alpha = 0
-			--itemsGuard.foto = "imgGuardTurn." .. extImg
-			--if first == 0 then
-				--buildItemGuardTurn(1)
-				--first = 1
-			--end
 			
 		end
 	end
@@ -90,7 +80,11 @@ function loadImageGuard()
 
 end
 
-function createGuard(typePhoto)
+------------------------------------------------------------------
+-- @todo Crea los elementos del guardia
+-- @param existGuard indica si existe datos del guardia en turno
+------------------------------------------------------------------
+function createGuard(existGuard)
 
 	local posY = 150 + h
 	
@@ -99,16 +93,14 @@ function createGuard(typePhoto)
 	bgGuardPhoto.screen = "login"
 	grpGuardAssi:insert( bgGuardPhoto )	
 	
-	--RestManager.getLastGuard()
+	--muestra la foto del guardia si existe o uno default
 	local avatar
 	local mask = graphics.newMask( "img/bgk/image-mask-mask3.png" )
-	if typePhoto == 1 then
+	if existGuard == 1 then
 		avatar = display.newImage( itemsGuard.foto, system.TemporaryDirectory )
 	else
 		avatar = display.newImage( itemsGuard.foto )
 	end
-	--local imgPhotoGuard = display.newImage( "img/bgk/fotoGuard.jpeg" )
-	--avatar.anchorY = 0
 	avatar:translate( 160 , posY )
 	avatar.width = 126
 	avatar.height = 126
@@ -167,9 +159,11 @@ function createGuard(typePhoto)
 	
 end
 
--- muestra un guardia por defecto
+------------------------------------------------------------------
+-- @todo carga la informacion de un guardia default
+-- en caso de no existir uno activo
+------------------------------------------------------------------
 function paintGuardDefault()
-	print("hola")
 	itemsGuard = {}
 	itemsGuard.nombre = "SIN GUARDIAS REGISTRADOS"
 	itemsGuard.apellidos = ""

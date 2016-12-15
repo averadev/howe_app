@@ -204,26 +204,26 @@ function deleteLoadingLogin()
 end
 
 function getNoContent(obj, txtData)
-		if not grpLoading then
-			grpLoading = display.newGroup()
-			obj:insert(grpLoading)
+	if not grpLoading then
+		grpLoading = display.newGroup()
+		obj:insert(grpLoading)
 			
-			local noData = display.newImage( "img/btn/mail-icon.png" )
-			noData.x = display.contentWidth / 2
-			noData.y = (obj.height / 3) - 35
-			grpLoading:insert(noData) 
-			
-			local title = display.newText( txtData, 0, 30, "Chivo", 16)
-			title:setFillColor( 0 )
-			title.x = display.contentWidth / 2
-			title.y = (obj.height / 3) + 80
-			grpLoading:insert(title) 
-		else
-			grpLoading:removeSelf()
-			grpLoading = nil
-			getNoContent(obj, txtData)
-		end
+		local noData = display.newImage( "img/bgk/mail-icon.png" )
+		noData.x = obj.contentWidth / 2
+		noData.y = (obj.height / 2) - 100
+		grpLoading:insert(noData) 
+		
+		local title = display.newText( txtData, 0, 30, "Chivo", 16)
+		title:setFillColor( 0 )
+		title.x = obj.contentWidth / 2
+		title.y = (obj.height / 2) 
+		grpLoading:insert(title) 
+	else
+		grpLoading:removeSelf()
+		grpLoading = nil
+		getNoContent(obj, txtData)
 	end
+end
 
 
 function sinAction( event )

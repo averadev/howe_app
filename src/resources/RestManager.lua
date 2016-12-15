@@ -224,4 +224,117 @@ local RestManager = {}
 	
 	end
 	
+	---------------------------------- Pantalla messages ----------------------------------
+	
+	--obtiene los mensajes de administracion
+	RestManager.getMessageToAdmin = function()
+		
+		reloadConfig()
+        -- Set url
+        local url = dbConfig.url
+        url = url.."api/getMessageToAdmin/format/json"
+        url = url.."/idApp/"..dbConfig.idApp
+        url = url.."/condominioId/"..dbConfig.condominioId
+	
+        local function callback(event)
+            if ( event.isError ) then
+            else
+                local data = json.decode(event.response)
+				if data.success then
+					local items = data.items
+					setItemsNotiAdmin(items)
+                else
+					native.showAlert( "Plantec Resident", data.message, { "OK"})
+                end
+            end
+            return true
+        end
+        -- Do request
+        network.request( url, "GET", callback )
+	
+	end
+	
+	--elimina los mensajes seleccionados
+	RestManager.deleteMsgAdmin = function(adminId)
+	
+		local encoded = json.encode( adminId, { indent = true } )
+		
+		reloadConfig()
+		
+		local dbConfig = DBManager.getSettings()
+        -- Set url
+        local url = dbConfig.url
+        url = url.."api/deleteMsgAdmin/format/json"
+        url = url.."/idApp/"..dbConfig.idApp
+        url = url.."/idMSG/".. urlencode(encoded)
+	
+        local function callback(event)
+            if ( event.isError ) then
+            else
+                local data = json.decode(event.response)
+				if data.success then
+					refreshMessageAdmin()
+                else
+					
+                end
+            end
+            return true
+        end
+        -- Do request
+        network.request( url, "GET", callback )
+		
+	end
+	
+	--marca el mesaje como leidos
+	RestManager.markMessageRead = function(id, typeM)
+		
+		reloadConfig()
+        -- Set url
+        local url = dbConfig.url
+        url = url.."api/markMessageRead/format/json"
+        url = url.."/idApp/".. dbConfig.idApp
+        url = url.."/idMSG/".. id
+		url = url.."/typeM/".. typeM
+		print(url)
+	
+        local function callback(event)
+            if ( event.isError ) then
+            else
+				--RestManager.getMessageUnRead()
+            end
+            return true
+        end
+        -- Do request
+        network.request( url, "GET", callback )
+		
+	end
+	
+	--obtiene el numero de mensajes no leidos de visitas
+	RestManager.getMessageUnRead = function()
+	
+		reloadConfig()
+        -- Set url
+        local url = dbConfig.url
+        url = url.."api/getMessageUnRead/format/json"
+        url = url.."/idApp/"..dbConfig.idApp
+        url = url.."/condominium/"..dbConfig.condominioId
+		print(url)
+        local function callback(event)
+            if ( event.isError ) then
+				native.showAlert( "Plantec Resident", "Error con el servidor", { "OK"})
+            else
+                local data = json.decode(event.response)
+				if data.success then
+					--createNotBubble(data.items, data.items2)
+                else
+                   native.showAlert( "Plantec Resident", "Error con el servidor", { "OK"})
+                end
+            end
+            return true
+        end
+        -- Do request
+        network.request( url, "GET", callback )
+	
+	end
+	
 return RestManager
