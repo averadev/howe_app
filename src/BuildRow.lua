@@ -63,7 +63,8 @@ function Message:new()
         container.y = 15
 		container.item = item
         self:insert( container )
-		--container:addEventListener( "tap", showMessage )
+		container:addEventListener( "tap", showMessage )
+		container.anchorY = 0
 
         local maxShape = display.newRect( 0, 0, 460, 100 )
         maxShape:setFillColor( unpack(cGrayL) )
@@ -108,6 +109,7 @@ function Message:new()
 		bgCheckA.check = 0
 		bgCheckA.id = item.idXref
 		bgCheckA.posc = item.posc
+		bgCheckA.alpha = .02
         container:insert( bgCheckA )
 		bgCheckA:addEventListener( 'tap', checkBoxDeleteA )
 		
@@ -132,6 +134,8 @@ function Visit:new()
     -- Variables
     local self = display.newGroup()
 	local btnCheckIn
+	local grpTracing
+	local container
 	
 	function AssignedCoupon(item)
 		assigned = item
@@ -176,91 +180,196 @@ function Visit:new()
 		
 		return true
 	end
+	
+	function VisitTracking( event )
+	
+		local t = event.target
+	
+		if grpTracing then
+			grpTracing.alpha = 0
+		end
+		
+		getAccess()
+		
+		return true
+	end
+	
+	function returnVisitTracking()
+		
+		local bgAccepted = display.newRect( 0, 70, 360, 60 )
+			bgAccepted:setFillColor( unpack( cWhite) )   
+			bgAccepted.fill = gGreenBlue
+			container:insert(bgAccepted)
+		
+	end
     
     -- Creamos la pantalla del menu
     --function self:build(isBg, item, image)
-	function self:build(item)
+	function self:build( item, srvW )
+	
         -- Generamos contenedor
-        local container = display.newContainer( 480, 130 )
-        container.x = 240
-        container.y = 60
+        container = display.newContainer( srvW, 220 )
+        container.x = srvW/2
+        container.y = 0
 		container.item = item
         self:insert( container )
-		container:addEventListener( "tap", showVisit )
+		--container:addEventListener( "tap", showVisit )
+		container.anchorY = 0
 
-        local maxShape = display.newRect( 0, 0, 460, 120 )
-        maxShape:setFillColor( .84 )
+        local maxShape = display.newRect( 0, 0, 460, 220 )
+        maxShape:setFillColor( unpack(cGrayL) )
+		maxShape.fill = gGreenBlue
         container:insert( maxShape )
 
-        local maxShape = display.newRect( 0, 0, 456, 116 )
-        maxShape:setFillColor( 1 )
+        local maxShape = display.newRect( 0, 0, 456, 218 )
+        maxShape:setFillColor( unpack(cWhite) )
         container:insert( maxShape )
-		
-		local imgVisit = display.newImage( "img/btn/visitas.png" )
-		imgVisit.x= -125
-		imgVisit.y = 12
-        container:insert(imgVisit)
 
         -- Agregamos textos
 		
 		local txtFecha = display.newText( {
-           -- text = item.fechaFormat,
-			text = item.dia .. " " .. item.fechaFormat,
-            x = 5, y = -40,
-            width = 400,
-            font = fontLatoBold, fontSize = 12, align = "left"
+			text = item.dia .. ", " .. item.fechaFormat,
+            x = 40, y = -90,
+            width = srvW,
+            font = fBoldItalic, fontSize = 18, align = "left",
         })
-        txtFecha:setFillColor( 0 )
+        txtFecha:setFillColor( unpack(cDarkBlue ) )
         container:insert(txtFecha)
 		
-		 local txtHora = display.newText( {
-           -- text = item.fechaFormat,
+		local txtHora = display.newText( {
 			text = item.hora,
-            x = 200, y = -40,
-            width = 100,
-            font = fontLatoBold, fontSize = 12, align = "left"
+            x = -15, y = -90,
+            width = srvW,
+            font = fBoldItalic, fontSize = 18, align = "right",
         })
-        txtHora:setFillColor( 0 )
+        txtHora:setFillColor( unpack(cDarkBlue ) )
         container:insert(txtHora)
         
+		local lbl1 = display.newText({
+			text = "Visitante: ",
+			x = 15, y = -60,
+            width = srvW,
+            font = fRegular, fontSize = 16, align = "left"
+        })
+        lbl1:setFillColor( unpack(cDarkBlue ) )
+        container:insert(lbl1)
+		
         local txtVisit = display.newText( {
 			text = item.nombreVisitante:sub(1,20),
-            x = 75, y = 0,
-            width = 300,
-            font = fontLatoBold, fontSize = 22, align = "left"
+			x = 15, y = -50,
+            width = srvW,
+            font = fBold, fontSize = 20, align = "left"
         })
-        txtVisit:setFillColor( 0 )
+        txtVisit:setFillColor( unpack(cDarkBlue ) )
         container:insert(txtVisit)
+		txtVisit.anchorY = 0
+		
+		local lbl1 = display.newText({
+			text = "Asunto: ",
+			x = 15, y = -10,
+            width = srvW,
+            font = fRegular, fontSize = 16, align = "left"
+        })
+        lbl1:setFillColor( unpack(cDarkBlue ) )
+        container:insert(lbl1)
 
         local txtInfo = display.newText( {
-            --text = item.detail:sub(1,42).."...",
 			text = item.motivo:sub(1,40),
-            x = 85, y = 32, width = 320,
-            font = fontLatoLight, fontSize = 16, align = "left"
+            x = 15, y = 3, width = srvW,
+            font = fBold, fontSize = 20, align = "left"
         })
-        txtInfo:setFillColor( .3 )
+        txtInfo:setFillColor( unpack( cDarkBlue ) )
         container:insert(txtInfo)
-        
-        local btnForward = display.newImage( "img/btn/btnForward.png" )
-        btnForward:translate( 200, 18)
-        container:insert( btnForward )
+		txtInfo.anchorY = 0
 		
-		local bgCheck = display.newRect( -190, 5, 50, 50 )
-        bgCheck:setFillColor( 1 )
-		bgCheck.check = 0
-		bgCheck.id = item.id
-		bgCheck.posc = item.posc
-        container:insert( bgCheck )
-		bgCheck:addEventListener( 'tap', checkBoxDelete )
+		if ( item.action == '0' ) then
 		
-		local btnCheckOut = display.newImage( "img/btn/select0.png" )
-        btnCheckOut:translate( -191, 6)
-        container:insert( btnCheckOut )
+			grpTracing = display.newGroup()
+			container:insert(grpTracing)
 		
-		btnCheckIn = display.newImage( "img/btn/select1.png" )
-        btnCheckIn:translate( -189, 4)
-		btnCheckIn.alpha = 0
-        container:insert( btnCheckIn )
+			local bgReject = display.newRect( -95, 70, 170, 60 )
+			bgReject:setFillColor( unpack( cWhite) )   
+			bgReject.fill = gGreenBlue
+			grpTracing:insert(bgReject)
+			
+			local btnReject = display.newRect( -95, 70, 168, 58 )
+			btnReject:setFillColor( unpack( cWhite) )
+			btnReject.action = 3 
+			grpTracing:insert(btnReject)
+			btnReject:addEventListener( 'tap', VisitTracking )
+			
+			local iconReject = display.newImage( "img/btn/logout.png" )
+			iconReject:translate( -157, 70 )
+			grpTracing:insert( iconReject )
+			iconReject.height = 30
+			iconReject.width = 30
+			
+			local lbl1 = display.newText({
+				text = "RECHAZAR",
+				x = -85, y = 70,
+				width = 170,
+				font = fRegular, fontSize = 18, align = "center"
+			})
+			lbl1:setFillColor( unpack( cDarkBlue ) )
+			grpTracing:insert(lbl1)
+			
+			local btnAccept = display.newRect( 95, 70, 170, 60 )
+			btnAccept:setFillColor( unpack(cWhite) )   
+			btnAccept.fill = gGreenBlue
+			btnAccept.action = 2
+			grpTracing:insert(btnAccept)
+			btnAccept:addEventListener( 'tap', VisitTracking )
+			
+			local iconAccept = display.newImage( "img/btn/icono_seleccionado.png" )
+			iconAccept:translate( 35, 70 )
+			grpTracing:insert( iconAccept )
+			iconAccept.height = 30
+			iconAccept.width = 30
+			iconAccept:setFillColor( unpack(cWhite) ) 
+			
+			local lbl1 = display.newText({
+				text = "ACEPTAR",
+				x = 105, y = 70,
+				width = 170,
+				font = fRegular, fontSize = 18, align = "center"
+			})
+			lbl1:setFillColor( unpack( cWhite ) )
+			grpTracing:insert(lbl1)
+		else
+			
+			local bgAccepted = display.newRect( 0, 70, 360, 60 )
+			bgAccepted:setFillColor( unpack( cWhite) )   
+			bgAccepted.fill = gGreenBlue
+			container:insert(bgAccepted)
+				
+			local btnAccepted = display.newRect( 0, 70, 358, 58 )
+			btnAccepted:setFillColor( unpack( cWhite) )
+			container:insert(btnAccepted)
+			
+			local lblAccepted = display.newText({
+				text = "",
+				x = 15, y = 70,
+				width = 360,
+				font = fRegular, fontSize = 18, align = "center"
+			})
+			lblAccepted:setFillColor( unpack( cDarkBlue ) )
+			container:insert(lblAccepted)
+			local iconName = ""
+			if ( item.action == '2' ) then
+				lblAccepted.text = "VISITA ACEPTADA"
+				iconName = "img/btn/icono_seleccionado.png"
+			elseif ( item.action == '3' ) then
+				lblAccepted.text = "VISITA RECHAZADA"
+				iconName = "img/btn/logout.png"
+			end
+			local iconAccepted = display.newImage( iconName )
+			iconAccepted:translate( -95, 70 )
+			container:insert( iconAccepted )
+			iconAccepted.height = 30
+			iconAccepted.width = 30
+			iconAccepted:setFillColor( unpack(cWhite) ) 
+		
+		end
         
     end
 

@@ -16,7 +16,7 @@ local RestManager = require( 'src.resources.RestManager' )
 --local fxTap = audio.loadSound( "fx/click.wav")
 
 -- Grupos y Contenedores
-local screen, grpGuardAssi
+local screen, grpReport
 local scene = composer.newScene()
 local tools
 
@@ -51,8 +51,8 @@ function scene:create( event )
 	tools:buildTooLeft()
 	
     -- group login
-    grpGuardAssi = display.newGroup()
-    screen:insert( grpGuardAssi )
+    grpReport = display.newGroup()
+    screen:insert( grpReport )
 	
 	--createGuard()
 	
@@ -62,6 +62,10 @@ function scene:create( event )
 	grpLoading.x = -midW + 86
 	grpLoading.anchorY = 0
 	grpLoading.anchorX = 0
+	
+	
+	
+	
 	
 	
 end	

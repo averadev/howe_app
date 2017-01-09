@@ -208,16 +208,18 @@ function getNoContent(obj, txtData)
 		grpLoading = display.newGroup()
 		obj:insert(grpLoading)
 			
-		local noData = display.newImage( "img/bgk/mail-icon.png" )
+		local noData = display.newImage( "img/bgk/SIN-MENSAJES.png" )
 		noData.x = obj.contentWidth / 2
 		noData.y = (obj.height / 2) - 100
-		grpLoading:insert(noData) 
+		grpLoading:insert(noData)
+		noData.height = 331
+		noData.width = 250
 		
-		local title = display.newText( txtData, 0, 30, "Chivo", 16)
+		--[[local title = display.newText( txtData, 0, 30, "Chivo", 16)
 		title:setFillColor( 0 )
 		title.x = obj.contentWidth / 2
 		title.y = (obj.height / 2) 
-		grpLoading:insert(title) 
+		grpLoading:insert(title) ]]
 	else
 		grpLoading:removeSelf()
 		grpLoading = nil

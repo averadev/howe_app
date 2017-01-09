@@ -64,6 +64,7 @@ settings =
 		usesPermissions =
 		{
 			"android.permission.INTERNET",
+			"android.permission.CALL_PHONE",
 		},
 		coronaWindowMovesWhenKeyboardAppears = true,
 	},

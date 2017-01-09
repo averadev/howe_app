@@ -68,8 +68,6 @@ local RestManager = {}
         url = url.."/email/"..urlencode(email)
         url = url.."/password/"..password
 		--url = url.."/playerId/"..urlencode(Globals.playerIdToken)
-		
-		print(url)
 	
         local function callback(event)
             if ( event.isError ) then
@@ -172,13 +170,10 @@ local RestManager = {}
 		body = body.."idApp=" .. dbConfig.idApp
 		body = body.."&email=" .. email
 		body = body.."&password=" .. password
-		print(body)
 
 		local params = {}
 		params.headers = headers
 		params.body = body
-		
-		print(url)
 
 		network.request( url, "POST", networkListener, params )
 		
@@ -195,6 +190,8 @@ local RestManager = {}
         url = url.."api/getLastGuard/format/json"
         url = url.."/idApp/"..dbConfig.idApp
 		url = url.."/condominioId/"..dbConfig.condominioId
+		
+		print(url)
 		
         local function callback(event)
             if ( event.isError ) then
@@ -303,7 +300,6 @@ local RestManager = {}
         url = url.."/idApp/".. dbConfig.idApp
         url = url.."/idMSG/".. id
 		url = url.."/typeM/".. typeM
-		print(url)
 	
         local function callback(event)
             if ( event.isError ) then
@@ -326,7 +322,7 @@ local RestManager = {}
         url = url.."api/getMessageUnRead/format/json"
         url = url.."/idApp/"..dbConfig.idApp
         url = url.."/condominium/"..dbConfig.condominioId
-		print(url)
+		
         local function callback(event)
             if ( event.isError ) then
 				native.showAlert( "Plantec Resident", "Error con el servidor", { "OK"})
@@ -343,6 +339,138 @@ local RestManager = {}
         -- Do request
         network.request( url, "GET", callback )
 	
+	end
+	
+	--------------------------------- Pantalla message ----------------------------------
+	
+	--obtiene el mensaje de visitante por id
+	RestManager.getMessageToAdminById = function(id)
+		local settings = DBManager.getSettings()
+        -- Set url
+        local url = settings.url
+        url = url.."api/getMessageToAdminById/format/json"
+        url = url.."/idApp/"..settings.idApp
+        url = url.."/idMSG/".. id
+		
+		print(url)
+	
+        local function callback(event)
+            if ( event.isError ) then
+            else
+                local data = json.decode(event.response)
+				if data.success then
+					local items = data.items
+					if #items > 0 then
+						setItemsAdmin(items[1])
+					else
+					
+					end
+                else
+					
+                end
+            end
+            return true
+        end
+        -- Do request
+        network.request( url, "GET", callback )
+	end
+	
+	---------------------------------- Pantalla visits ----------------------------------
+	
+	--obtiene los mensajes de visitantes
+	RestManager.getMessageToVisit = function()
+		
+		reloadConfig()
+        -- Set url
+        local url = dbConfig.url
+        url = url.."api/getMessageToVisit/format/json"
+        url = url.."/idApp/"..dbConfig.idApp
+        url = url.."/condominioId/"..dbConfig.condominioId
+        url = url.."/condominioId/"..dbConfig.condominioId
+        local function callback(event)
+            if ( event.isError ) then
+            else
+                local data = json.decode(event.response)
+				if data.success then
+					local items = data.items
+					setItemsVisits(items)
+                else
+                    native.showAlert( "Plantec Resident", data.message, { "OK"})
+                end
+            end
+            return true
+        end
+        -- Do request
+        network.request( url, "GET", callback )
+	
+	end
+	
+	RestManager.updateVisitAction = function()
+		returnVisitTracking()
+	end
+	
+	--obtiene el mensaje de visitante por id
+	RestManager.deleteMsgVisit = function(visitId)
+		local encoded = json.encode( visitId, { indent = true } )
+	
+		reloadConfig()
+        -- Set url
+        local url = dbConfig.url
+        url = url.."api/deleteMsgVisit/format/json"
+        url = url.."/idApp/"..dbConfig.idApp
+        url = url.."/idMSG/".. urlencode(encoded)
+	
+        local function callback(event)
+            if ( event.isError ) then
+            else
+                local data = json.decode(event.response)
+				if data.success then
+					refreshMessageVisit()
+                else
+					
+                end
+            end
+            return true
+        end
+		
+        -- Do request
+        network.request( url, "GET", callback )
+	end
+	
+	--------------------------------- Pantalla visit ----------------------------------
+	
+	--obtiene el mensaje de visitante por id
+	RestManager.getMessageToVisitById = function(id)
+		
+		reloadConfig()
+        -- Set url
+        local url = dbConfig.url
+        -- Set url
+        local url = dbConfig.url
+        url = url.."api/getMessageToVisitById/format/json"
+        url = url.."/idApp/"..dbConfig.idApp
+        url = url.."/idMSG/".. id
+	    
+        local function callback(event)
+            if ( event.isError ) then
+            else
+                local data = json.decode(event.response)
+				if data.success then
+					local items = data.items
+					if #items then
+						setItemsVisit(items[1])
+					else
+					
+					end
+                else
+					
+                end
+            end
+            return true
+        end
+        -- Do request
+        network.request( url, "GET", callback )
+		
 	end
 	
 return RestManager

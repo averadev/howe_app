@@ -111,7 +111,6 @@ function scene:create( event )
 	local btnLoginFace1 = display.newRect( midW, posY, intW - 100, 60 )
     btnLoginFace1:setFillColor( unpack(cWhite) )
     grpLoginFace:insert(btnLoginFace1)
-	--btnLoginFace1:addEventListener( 'tap', gotoScreen )
 	
 	local lblLogin = display.newText({
 		text = "FACEBOOK",
@@ -126,19 +125,25 @@ function scene:create( event )
 	
 	--btn login
 	local btnLogin = display.newRect( midW, posY, intW - 96, 64 )
-    btnLogin:setFillColor( unpack(cGrayL) )   
-	btnLogin.fill = gGreenBlue
+    btnLogin:setFillColor( unpack(cWhite) )   
 	btnLogin.screen = "Login"
     grpLoginFace:insert(btnLogin)
 	btnLogin:addEventListener( 'tap', gotoScreen )
 	
 	local lblLogin = display.newText({
-		text = "INGRESAR CON CORREO",
+		text = "INICIAR SESIÓN CON CORREO",
 		y = posY,x = midW,
-		font = fRegular, fontSize = 25, align = "center"
+		font = fLight, fontSize = 22, align = "center"
 	})
-	lblLogin:setFillColor( unpack(cWhite) )
+	lblLogin:setFillColor( unpack(cBlack) )
 	grpLoginFace:insert(lblLogin)
+	
+	posY = posY + 12
+	
+	local lineLogin = display.newLine( 65, posY, 410, posY )
+	lineLogin:setStrokeColor( unpack(cBlack) )
+	lineLogin.strokeWidth = 2
+	grpLoginFace:insert(lineLogin)
 	
 end	
 -- Called immediately after scene has moved onscreen:

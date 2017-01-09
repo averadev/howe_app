@@ -38,20 +38,20 @@ function Tools:new()
 		lblLogo:setFillColor( unpack(cWhite) )
 		self:insert(lblLogo)
 		
-		
 		local currScene = composer.getSceneName( "current" )
-	
-		if ( currScene == "src.SignIn" ) then
+		if ( currScene == "src.SignIn" or currScene == "src.Login"  ) then
 			local iconBack = display.newImage("img/btn/regresar.png")
 			iconBack:translate( 40 , 35 )
-			iconBack.screen = "Login"
+			if ( currScene == "src.Login"  ) then
+				iconBack.screen = "LoginFacebook"
+			elseif ( currScene == "src.SignIn" ) then
+				iconBack.screen = "Login"
+			end
 			self:insert( iconBack )
 			iconBack.height = 40
 			iconBack.width = 40
 			iconBack:addEventListener( 'tap', toScreen )
 		end
-		
-
     end
 	
     -------------------------------------
@@ -133,11 +133,11 @@ function Tools:new()
 		
 		local lastY = 0
 		
-		local optionTool = { "GuardAssigned", "Messages", "Visit", "Report", "Invitation", "Pass", "Alert" }
-		local iconTool = { "guardia.png", "message.png", "vistas.png", "reportes.png", "invitaciones.png", "pases.png", "alert.png" }
-		local optionLabel = { "GUARDIA EN TURNO", "MENSAJES", "VISITAS", "REPORTES", "INVITACIONES", "PASES", "EMITIR ALERTA" }
+		local optionTool = { "GuardAssigned", "Messages", "Visits", "Report", "Invitation", "Pass", "Alert" }
+		local iconTool = { "guardia.png", "message.png", "vistas.png", "reportes.png", "invitaciones.png", "llamar.png", "logout.png" }
+		local optionLabel = { "GUARDIA EN TURNO", "MENSAJES", "VISITAS", "REPORTES", "", "NUMERO DE EMERGENCIA", "CERRAR SESIÓN" }
 		local optionSubLabel = { "Comunicáte a Caseta", "Enviar mensaje a Administración", "Agenda y Solicita visitas programadas", 
-			"Envia Reportes", "Envia Invitaciones", "Otorga pases a tus invitados", "" }
+			"Envia Reportes", "", "Llamar a numeros de emergencia", "Cambia de residencia o de usuario" }
 		
 		local lastY = 0
 		
@@ -149,21 +149,22 @@ function Tools:new()
 			bg0.screen = optionTool[i]
 			bg0:setFillColor( unpack(cDarkBlue) )
 			scvToolbar:insert(bg0)
-			bg0:addEventListener( 'tap', toScreen )
-			
-			print()
+			if optionLabel[i] ~= "" then
+				bg0:addEventListener( 'tap', toScreen )
+			end
 			
 			local currScene = composer.getSceneName( "current" )
 			if currScene == "src." .. optionTool[i] then
-				--bg0:setFillColor( unpack(cWhite) )
 				bg0.fill = gGreenBlue
 			end
 			
-			local icon0 = display.newImage("img/btn/" .. iconTool[i])
-			icon0:translate( 40 , lastY + 50 )
-			--icon0.height = 40
-			--icon0.width = 40
-			scvToolbar:insert( icon0 )
+			if optionLabel[i] ~= "" then
+				local icon0 = display.newImage("img/btn/" .. iconTool[i])
+				icon0:translate( 40 , lastY + 50 )
+				--icon0.height = 40
+				--icon0.width = 40
+				scvToolbar:insert( icon0 )
+			end
 			
 			lastY = lastY + 100
 			
@@ -206,23 +207,25 @@ function Tools:new()
 		lineScv.alpha = .6
 		self:insert(lineScv)
 		
-		local optionTool = { "GuardAssigned", "Messages", "Visit", "Report", "Invitation", "Pass", "Alert" }
-		local iconTool = { "guardia.png", "message.png", "vistas.png", "reportes.png", "invitaciones.png", "pases.png", "alert.png" }
-		local optionLabel = { "GUARDIA EN TURNO", "MENSAJES", "VISITAS", "REPORTES", "INVITACIONES", "PASES", "EMITIR ALERTA" }
+		local optionTool = { "GuardAssigned", "Messages", "Visits", "Report", "Invitation", "Pass", "Alert" }
+		local iconTool = { "guardia.png", "message.png", "vistas.png", "reportes.png", "invitaciones.png", "llamar.png", "logout.png" }
+		local optionLabel = { "GUARDIA EN TURNO", "MENSAJES", "VISITAS", "REPORTES", "", "NUMERO DE EMERGENCIA", "CERRAR SESIÓN" }
 		local optionSubLabel = { "Comunicáte a Caseta", "Enviar mensaje a Administración", "Agenda y Solicita visitas programadas", 
-			"Envia Reportes", "Envia Invitaciones", "Otorga pases a tus invitados", "" }
+			"Envia Reportes", "", "Llamar a numeros de emergencia", "Cambia de residencia o de usuario" }
 		
 		local lastY = 0
 		
 		for i = 1, #optionTool, 1 do
 		
-			local bg1 = display.newRect( 80, lastY, intW - 79, 100 )
+			local bg1 = display.newRect( 0, lastY, intW, 100 )
 			bg1.anchorX = 0
 			bg1.anchorY = 0
 			bg1.screen = optionTool[i]
 			bg1:setFillColor( unpack(cWhite) )
 			scvToolbar:insert(bg1)
-			bg1:addEventListener( 'tap', toScreen )
+			if optionLabel[i] ~= "" then
+				bg1:addEventListener( 'tap', toScreen )
+			end
 			
 			local bg0 = display.newRect( 0, lastY, 80, 100 )
 			bg0.anchorX = 0
@@ -230,11 +233,13 @@ function Tools:new()
 			bg0:setFillColor( unpack(cDarkBlue) )
 			scvToolbar:insert(bg0)
 			
-			local icon0 = display.newImage("img/btn/" .. iconTool[i])
-			icon0:translate( 40 , lastY + 50 )
-			--icon0.height = 40
-			--icon0.width = 40
-			scvToolbar:insert( icon0 )
+			if optionLabel[i] ~= "" then
+				local icon0 = display.newImage("img/btn/" .. iconTool[i])
+				icon0:translate( 40 , lastY + 50 )
+				--icon0.height = 40
+				--icon0.width = 40
+				scvToolbar:insert( icon0 )
+			end
 			
 			local lbl0 = display.newText({
 				text = optionLabel[i],

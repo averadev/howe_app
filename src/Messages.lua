@@ -24,7 +24,10 @@ local scene = composer.newScene()
 local tools
 local NotiMessageScreen = display.newGroup()
 local groupASvContent = display.newGroup()
-local groupABtnSvContent = display.newGroup()
+local grpDelete = display.newGroup()
+local grpEdit = display.newGroup()
+local grpBtnDelete = display.newGroup()
+
 
 local dbConfig = DBManager.getSettings()
 
@@ -34,50 +37,29 @@ local itemsAdmin
 local posY = 0
 local idDeleteA = {}
 local noLeidoA = {}
+local container = {}
+local btnCheckOutM = {}
+local btnCheckInM = {}
 
 ---------------------------------------------------------------------------------
 -- FUNCIONES
 ---------------------------------------------------------------------------------
 
 function setItemsNotiAdmin( items )
-
-	print(#items)
-	
 	if #items > 0 then
 		itemsAdmin = items
 		buildMensageItems()
 	else
 		getNoContent(svMessage,'En este momento no cuentas con mensajes')
 	end
-	
 end
 
 function noMessages(message)
 	getNoContent( svMessage, message )
 end
 
---muestra y/o oculta el boton de eliminar visitas
-function showBtnDeleteAdmin(isTrue, isActive, idVisit, posc)
-	
-	if isTrue then
-		groupASvContent.y = 80
-		groupABtnSvContent.alpha = 1
-		svMessage:setScrollHeight(posY + 80)
-	else
-		groupASvContent.y = 0
-		groupABtnSvContent.alpha = 0
-		svMessage:setScrollHeight(posY)
-	end
-	if isActive then
-		idDeleteA[posc] = idVisit
-	else
-		idDeleteA[posc] = 0
-	end
-	
-end
-
 --elimina las visitas selecionadas
-function deleteAdmin( event )
+function deleteMessage( event )
 	--table.remove(idDeleteA,2)
 	local adminDelete = {}
 	for i= 1, #idDeleteA, 1 do
@@ -85,6 +67,7 @@ function deleteAdmin( event )
 			adminDelete[#adminDelete + 1] = idDeleteA[i]
 		end
 	end
+	
 	tools:setLoading( true, grpLoading )
 	RestManager.deleteMsgAdmin(adminDelete)
 	return true
@@ -93,9 +76,14 @@ end
 function refreshMessageAdmin()
 	
 	groupASvContent:removeSelf();
-	groupABtnSvContent:removeSelf();
+	grpDelete:removeSelf();
+	grpEdit:removeSelf();
+	grpBtnDelete:removeSelf();
+	
 	groupASvContent = display.newGroup()
-	groupABtnSvContent = display.newGroup()
+	grpDelete = display.newGroup()
+	grpEdit = display.newGroup()
+	grpBtnDelete = display.newGroup()
 	RestManager.getMessageToAdmin()
 	
 	tools:setLoading( false, grpLoading )
@@ -109,11 +97,6 @@ function markReadAdmin( event )
 	if noLeidoA[event.target.posci] then
 		noLeidoA[event.target.posci]:removeSelf()
 		noLeidoA[event.target.posci] = nil
-		--[[noLeidoA[event.target.posci]:removeSelf()
-		noLeidoA[event.target.posci] =  display.newImage( "img/btn/mensaje-leido.png" )
-		noLeidoA[event.target.posci].x = 110
-		noLeidoA[event.target.posci].y = event.target.pocY + 60
-		svContent:insert(noLeidoA[event.target.posci])]]
 	end
 	
 	RestManager.markMessageRead( event.target.id, 1 )
@@ -121,91 +104,245 @@ function markReadAdmin( event )
 	
 end
 
+function showCheckBox( event )
+	grpDelete.alpha = 1
+	grpBtnDelete.alpha = 1
+	grpEdit.alpha = 0
+	return true
+end
+
+function hideCheckBox( event )
+	grpDelete.alpha = 0
+	grpBtnDelete.alpha = 0
+	grpEdit.alpha = 1
+	return true
+end
+
+function changeCheckBoxM( event )
+
+	local t = event.target
+	
+	local active
+		if t.check == 0 then
+		btnCheckOutM[t.posc].alpha = 0
+		btnCheckInM[t.posc].alpha = 1
+		t.check = 1
+		--contDeleteAdmin = contDeleteAdmin + 1
+		idDeleteA[t.posc] = t.id
+		active = true
+	else
+		btnCheckInM[t.posc].alpha = 0
+		btnCheckOutM[t.posc].alpha = 1
+		t.check = 0
+		--contDeleteAdmin = contDeleteAdmin - 1
+		active = false
+		idDeleteA[t.posc] = 0
+	end
+	
+	return true
+	
+end
+
+function showMessage(event)
+        local composer = require( "composer" )
+		
+        local current = composer.getSceneName( "current" )
+		if current ~= "src.Message" then
+            composer.removeScene( "src.Message" )
+			composer.gotoScene( "src.Message", {
+                time = 400,
+                effect = "crossFade",
+                params = { id = event.target.item.id }
+            })
+		end
+    end
+
+function createMessages( i, srvW, posY )
+	
+	container[i] = display.newContainer( srvW, 110 )
+	container[i].x = srvW/2
+	container[i].y = posY
+	container[i].item = itemsAdmin[i]
+	container[i].id = itemsAdmin[i].idXref
+	container[i].posci = i
+	container[i].posY = posY
+	groupASvContent:insert( container[i] )
+	container[i]:addEventListener( "tap", showMessage )
+	container[i].anchorY = 0
+	
+	local maxShape = display.newRect( 0, 0, 460, 100 )
+	maxShape:setFillColor( unpack(cGrayL) )
+	maxShape.fill = gGreenBlue
+	container[i]:insert( maxShape )
+
+	local maxShape = display.newRect( 0, 0, 456, 98 )
+	maxShape:setFillColor( unpack(cWhite) )
+	container[i]:insert( maxShape )
+	
+	local txtFecha = display.newText( {
+		text = itemsAdmin[i].dia .. ", " .. itemsAdmin[i].fechaFormat,
+		x = -15, y = -30,
+		width = srvW,
+		font = fLight, fontSize = 16, align = "right",
+	})
+	txtFecha:setFillColor( unpack(cDarkBlue ) )
+	container[i]:insert(txtFecha)
+	
+	-- Agregamos textos
+	local txtPartner = display.newText( {
+			--text = item.partner,
+		text = "DE: " .. itemsAdmin[i].nombreAdmin .. " " .. itemsAdmin[i].apellidosAdmin,
+		x = 15, y = -10,
+		width = srvW,
+		font = fRegular, fontSize = 18, align = "left"
+	})
+	txtPartner:setFillColor( unpack(cDarkBlue ) )
+	container[i]:insert(txtPartner)
+	
+	local txtInfo = display.newText( {
+		text = "Asunto: " .. itemsAdmin[i].asunto:sub(1,30).."...",
+		x = 15, y = 20, width = srvW,
+		font = fRegular, fontSize = 18, align = "left"
+	})
+	txtInfo:setFillColor( unpack(cDarkBlue ) )
+	container[i]:insert(txtInfo)
+	
+	-- checkbox
+	local bgCheckA = display.newRect( -150, -25, 50, 50 )
+	bgCheckA:translate( srvW + 120, posY + 100 )
+	bgCheckA:setFillColor( unpack( cWhite ) )
+	bgCheckA.check = 0
+	bgCheckA.name = "checkbox"
+	bgCheckA.id = itemsAdmin[i].idXref
+	bgCheckA.posc = itemsAdmin[i].posc
+	bgCheckA.alpha = .02
+	bgCheckA.alpha = .8
+	grpDelete:insert( bgCheckA )
+	bgCheckA:addEventListener( 'tap', changeCheckBoxM )
+		
+	btnCheckOutM[i] = display.newImage( "img/btn/icono_paraseleccionar.png" )
+	btnCheckOutM[i].name = "CheckOut"
+	btnCheckOutM[i].height = 30
+	btnCheckOutM[i].width = 30
+	btnCheckOutM[i]:translate( srvW - 30 , posY + 75 )
+	grpDelete:insert( btnCheckOutM[i] )
+		
+	btnCheckInM[i] = display.newImage( "img/btn/icono_seleccionado.png" )
+	btnCheckInM[i].name = "CheckIn"
+	btnCheckInM[i].height = 30
+	btnCheckInM[i].width = 30
+	btnCheckInM[i]:translate( srvW - 30 , posY + 75 )
+	btnCheckInM[i].alpha = 0
+	grpDelete:insert( btnCheckInM[i] )
+	
+	-- borbuja no leidos
+	noLeidoA[i] = display.newCircle( 315, posY + 75, 12 )
+	noLeidoA[i]:setFillColor( 0.5 )
+	noLeidoA[i].fill = gGreenBlue
+	groupASvContent:insert(noLeidoA[i])
+			
+	if itemsAdmin[i].leido == "0" then
+		container[i]:addEventListener( 'tap', markReadAdmin )
+	else
+		noLeidoA[i].alpha = 0
+	end
+	
+end
 
 function buildMensageItems( event)
 
-	posY = 35
-	
+	posY = 40
 	local srvW = svMessage.contentWidth
 	local srvH = svMessage.contentHeight
 
 	svMessage:insert(groupASvContent)
-	svMessage:insert(groupABtnSvContent)
+	svMessage:insert(grpDelete)
+	grpMessages:insert(grpEdit)
+	grpMessages:insert(grpBtnDelete)
 	
-	groupABtnSvContent.alpha = 0
+	grpDelete.alpha = 0
+	grpBtnDelete.alpha = 0
 	
-	--[[local bgDeleteMsg = display.newRoundedRect( 0, posY + 30, 170, 60, 5 )
-	bgDeleteMsg.anchorX = 0
-	bgDeleteMsg:setFillColor( 0, 80/255, 0 )
-	svMessage:insert(bgDeleteMsg)]]
+	posY = h + 95
 	
-	local bgDeleteAdmin = display.newRect( srvW/2, posY, srvW - 30, 60 )
-    bgDeleteAdmin:setFillColor( unpack(cWhite) )   
-	bgDeleteAdmin.fill = gGreenBlue
-    groupABtnSvContent:insert(bgDeleteAdmin)
+	local bgEdit = display.newRect( midW + 40, posY, srvW - 200, 35 )
+    bgEdit:setFillColor( unpack(cWhite) )   
+	bgEdit.fill = gGreenBlue
+    grpEdit:insert(bgEdit)
 	
-	btnDeleteAdmin = display.newRect( srvW/2, posY, srvW - 34, 56 )
-    btnDeleteAdmin:setFillColor( unpack(cWhite) ) 
-    groupABtnSvContent:insert(btnDeleteAdmin)
-	btnDeleteAdmin:addEventListener( 'tap', deleteAdmin )
+	btnEdit = display.newRect( midW + 40, posY, srvW - 202, 33 )
+    btnEdit:setFillColor( unpack(cWhite) ) 
+    grpEdit:insert(btnEdit)
+	btnEdit:addEventListener( 'tap', showCheckBox )
 	
-	local txtBtnDeleteAdmin = display.newText( {
-		text = "Borrar mensajes",
-		x = srvW/2, y = posY,
-		font = fRegular, fontSize = 24, align = "center"
+	local lblEdit = display.newText( {
+		text = "EDITAR",
+		x = midW + 40, y = posY,
+		font = fRegular, fontSize = 18, align = "center"
 	})
-	txtBtnDeleteAdmin:setFillColor( unpack(cDarkBlue) )
-	groupABtnSvContent:insert(txtBtnDeleteAdmin)
+	lblEdit:setFillColor( unpack(cDarkBlue) )
+	grpEdit:insert(lblEdit)
+	
+	-- btns delete messages
+	local btnCancelEdit = display.newRect( srvW / 2 - 10, posY, srvW / 2 - 40, 35 )
+    btnCancelEdit:setFillColor( unpack( cWhite ) )
+    grpBtnDelete:insert(btnCancelEdit)
+	btnCancelEdit:addEventListener( 'tap', hideCheckBox )
+	
+	local lblCancelEdit  = display.newText( {
+		text = "CANCELAR",
+		x = srvW / 2 - 10, y = posY,
+		font = fRegular, fontSize = 18, align = "center"
+	})
+	lblCancelEdit:setFillColor( unpack( cDarkBlue ) )
+	grpBtnDelete:insert(lblCancelEdit)
+	
+	local bgAcceptEdit = display.newRect( srvW  - 20, posY, srvW / 2 - 40, 35 )
+    bgAcceptEdit:setFillColor( unpack(cWhite) )   
+	bgAcceptEdit.fill = gGreenBlue
+    grpBtnDelete:insert(bgAcceptEdit)
+	
+	local btnAcceptEdit = display.newRect( srvW  - 20, posY, srvW / 2 - 42, 33 )
+    btnAcceptEdit:setFillColor( unpack(cWhite) )
+    grpBtnDelete:insert(btnAcceptEdit)
+	btnAcceptEdit:addEventListener( 'tap', deleteMessage )
+	
+	local lblAcceptEdit  = display.newText( {
+		text = "ACEPTAR",
+		x = srvW  - 20 , y = posY,
+		font = fRegular, fontSize = 18, align = "center"
+	})
+	lblAcceptEdit:setFillColor( unpack( cDarkBlue ) )
+	grpBtnDelete:insert(lblAcceptEdit)
+	
+	posY = -5
 	
 	for y = 1, #itemsAdmin, 1 do
-		
 		idDeleteA[y] = 0
-	
 		itemsAdmin[y].posc = y
-	
-		local message = Message:new()
+		
+		createMessages( y, srvW, posY )
+		
+		--[[local message = Message:new()
 		groupASvContent:insert(message)
 		message:build(itemsAdmin[y], srvW)
 		message.y = posY
 		message.id = itemsAdmin[y].idXref
 		message.posci = y
 		message.posY = posY
-		--message:addEventListener('tap', markReadAdmin)
 		
-		
-			noLeidoA[y] = display.newCircle( 315, posY + 30, 12 )
-			noLeidoA[y]:setFillColor( 0.5 )
-			noLeidoA[y].fill = gGreenBlue
-			groupASvContent:insert(noLeidoA[y])
+		noLeidoA[y] = display.newCircle( 315, posY + 30, 12 )
+		noLeidoA[y]:setFillColor( 0.5 )
+		noLeidoA[y].fill = gGreenBlue
+		groupASvContent:insert(noLeidoA[y])
 			
 		if itemsAdmin[y].leido == "0" then
 			message:addEventListener( 'tap', markReadAdmin )
 		else
 			noLeidoA[y].alpha = 0
-		end
-		
-		
-		
-		--[[if itemsAdmin[y].leido == "0" then
-			noLeidoA[y] =  display.newImage( "img/btn/mensaje-nvo.png" )
-		else
-			noLeidoA[y] =  display.newImage( "img/btn/mensaje-leido.png" )
-		end
-		noLeidoA[y].x = 110
-		noLeidoA[y].y = posY + 60
-		groupASvContent:insert(noLeidoA[y])]]
-		
-		--[[if itemsAdmin[y].leido == "0" then
-				noLeidoA[y] =  display.newImage( "img/btn/mensaje-nvo.png" )
-			else
-				noLeidoA[y] =  display.newImage( "img/btn/mensaje-leido.png" )
-            end
-			noLeidoA[y].x = 110
-			noLeidoA[y].y = posY + 60
-			groupASvContent:insert(noLeidoA[y])
-           ]]
+		end]]
 		   
-		 posY = posY + 99
+		posY = posY + 99
 		
 	end
 	
@@ -239,7 +376,7 @@ function scene:create( event )
     screen:insert( grpMessages )
 	
 	svMessage = widget.newScrollView{
-		top =  h + 71,
+		top =  h + 120,
 		left = 86,
 		width = intW - 85,
 		height = intH - ( h + 69),
@@ -247,8 +384,6 @@ function scene:create( event )
 		backgroundColor = { unpack(cGrayL) }
 	}
 	grpMessages:insert(svMessage)
-	
-	--createGuard()
 	
 	grpLoading = display.newContainer( (intW + midW) - 85, (intH * 2)  )
 	screen:insert( grpLoading )
@@ -260,10 +395,6 @@ function scene:create( event )
 	tools:setLoading( true, grpLoading )
 	
 	RestManager.getMessageToAdmin()
-	
-	--getBuildMessageItem() 
-	
-	--RestManager.getLastGuard()
 	
 	
 end	

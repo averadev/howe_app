@@ -14,7 +14,8 @@ h = display.topStatusBarContentHeight
 
 -- Colors
 cBlack = { 0 }
-cGrayL = { .95 }
+cGrayL = { .93 }
+cGrayB = { .88 }
 cWhite = { 1 }
 cGreenWater = { 0, .72, .43 }
 cBluenWater = { 0, .76, .78 }
@@ -46,10 +47,12 @@ gBlueWhite1 = {
 local environment = system.getInfo( "environment" )
 if environment == "simulator" then
 	fBold = native.systemFontBold
+	fBoldItalic = native.systemFontBold
 	fLight = native.systemFont
 	fRegular = native.systemFont
 else
-	fBold = "Lato-Bold.ttf"
-	fLight = "Lato-Light.ttf"
-	fRegular = "Lato-Regular.ttf"
+	fBold = "Raleway-Bold.ttf"
+	fBoldItalic = "Raleway-BoldItalic.ttf"
+	fLight = "Raleway-Light.ttf"
+	fRegular = "Raleway-Regular.ttf"
 end

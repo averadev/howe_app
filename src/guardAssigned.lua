@@ -10,6 +10,7 @@
 -- Includes
 require( 'src.Tools' )
 require( 'src.resources.Globals' )
+local widget = require( "widget" )
 local composer = require( "composer" )
 local DBManager = require( 'src.resources.DBManager' )
 local RestManager = require( 'src.resources.RestManager' )
@@ -19,6 +20,7 @@ local RestManager = require( 'src.resources.RestManager' )
 local screen, grpGuardAssi
 local scene = composer.newScene()
 local tools
+local svGuardAssig
 
 local dbConfig = DBManager.getSettings()
 -- Variables
@@ -80,18 +82,33 @@ function loadImageGuard()
 
 end
 
+--llama al telefono del comercio
+function callPhone( event )
+	system.openURL( "tel:" .. event.target.phone )
+end
+
 ------------------------------------------------------------------
 -- @todo Crea los elementos del guardia
 -- @param existGuard indica si existe datos del guardia en turno
 ------------------------------------------------------------------
 function createGuard(existGuard)
 
-	local posY = 150 + h
+	svGuardAssig = widget.newScrollView{
+		top =  h + 71,
+		left = 86,
+		width = intW - 85,
+		height = intH - ( h + 69),
+		--horizontalScrollDisabled = true,
+		backgroundColor = { unpack(cWhite) }
+	}
+	grpGuardAssi:insert(svGuardAssig)
+
+	local posY = 75
 	
 	local bgGuardPhoto = display.newImage("img/btn/bgCircleGradient.png")
-	bgGuardPhoto:translate( 160 , posY )
+	bgGuardPhoto:translate( 75 , posY )
 	bgGuardPhoto.screen = "login"
-	grpGuardAssi:insert( bgGuardPhoto )	
+	svGuardAssig:insert( bgGuardPhoto )	
 	
 	--muestra la foto del guardia si existe o uno default
 	local avatar
@@ -101,59 +118,185 @@ function createGuard(existGuard)
 	else
 		avatar = display.newImage( itemsGuard.foto )
 	end
-	avatar:translate( 160 , posY )
+	avatar:translate( 75 , posY )
 	avatar.width = 126
 	avatar.height = 126
 	avatar:setMask( mask )
 	avatar.maskScaleY = .68
 	avatar.maskScaleX = .68
-	grpGuardAssi:insert( avatar )
+	svGuardAssig:insert( avatar )
 	
 	local lblGuardAssig = display.newText({
 		text = "Guardia en turno",
-		y = posY - 25 ,x = midW + 100,
-		font = fRegular, fontSize = 20, align = "center"
+		y = posY - 25 ,x = midW + 35, width = 235,
+		font = fRegular, fontSize = 16, align = "left"
 	})
 	lblGuardAssig:setFillColor( unpack(cDarkBlue) )
-	grpGuardAssi:insert(lblGuardAssig)
-	
+	svGuardAssig:insert(lblGuardAssig)
 	local lblNameGuard = display.newText({
 		text = itemsGuard.nombre .. " " .. itemsGuard.apellidos,
-		y = posY + 25 ,x = midW + 100, width = 265,
-		font = fBold, fontSize = 28, align = "center"
+		y = posY - 10 ,x = midW + 35, width = 235,
+		font = fBold, fontSize = 24, align = "left"
 	})
 	lblNameGuard:setFillColor( unpack(cDarkBlue) )
-	grpGuardAssi:insert(lblNameGuard)
+	svGuardAssig:insert(lblNameGuard)
+	lblNameGuard.anchorY = 0
 	
-	posY = posY + 125
+	local location = { "Av. 135 Sm.326, MZ. 1", "Residenciales del sur", "Camcun, Quintana Roo" }
 	
-	local lblGuardAge = display.newText({
-		text = "Edad: " .. itemsGuard.edad .. " años",
-		y = posY ,x = midW + 50, width = intW - 100,
-		font = fLight, fontSize = 20, align = "left"
+	posY = posY + 90
+	
+	for i = 1, #location, 1 do
+		local lblLocation = display.newText({
+			text = location[i],
+			y = posY ,x = midW - 35, width = intW - 100,
+			font = fLight, fontSize = 16, align = "left"
+		})
+		lblLocation:setFillColor( unpack(cDarkBlue) )
+		svGuardAssig:insert(lblLocation)
+		lblLocation.anchorY = 0
+		lblLocation.alpha = .85
+		posY = posY + 25
+	end
+	
+	posY = posY + 25
+	
+	local line1 = display.newLine( 0, posY, intW, posY )
+	line1:setStrokeColor( unpack(cGreenWater) )
+	line1.strokeWidth = 2
+	line1.alpha = .6
+	svGuardAssig:insert(line1)
+	
+	-- caseta
+	posY = posY + 25
+	
+	local lblPhoneBooth0 = display.newText({
+		text = "Teléfono de caseta",
+		y = posY ,x = midW - 35, width = intW - 100,
+		font = fRegular, fontSize = 18, align = "left"
 	})
-	lblGuardAge:setFillColor( unpack(cDarkBlue) )
-	grpGuardAssi:insert(lblGuardAge)
+	lblPhoneBooth0:setFillColor( unpack(cDarkBlue) )
+	svGuardAssig:insert(lblPhoneBooth0)
 	
-	posY = posY  + 40
+	posY = posY + 35
 	
-	local lblWorkingTime = display.newText({
-		text = "Empleado desde: " .. itemsGuard.workingTime,
-		y = posY ,x = midW + 50, width = intW - 100,
-		font = fLight, fontSize = 20, align = "left"
+	local lblPhoneBooth = display.newText({
+		text = itemsGuard.telCaseta,
+		y = posY ,x = midW - 35, width = intW - 100,
+		font = fBold, fontSize = 26, align = "left"
 	})
-	lblWorkingTime:setFillColor( unpack(cDarkBlue) )
-	grpGuardAssi:insert(lblWorkingTime)
+	lblPhoneBooth:setFillColor( unpack(cDarkBlue) )
+	svGuardAssig:insert(lblPhoneBooth)
 	
-	posY = posY  + 40
+	local iconPhone = display.newImage( "img/btn/llamar.png" )
+	iconPhone:translate( svGuardAssig.contentWidth - 50 , posY )
+	iconPhone.phone = itemsGuard.telCaseta
+	iconPhone:setFillColor( unpack(cDarkBlue) )
+	svGuardAssig:insert( iconPhone )
+	iconPhone:addEventListener( 'tap', callPhone )
 	
-	local lblBusiness = display.newText({
-		text = "Empresa: Guardias Force",
-		y = posY ,x = midW + 50, width = intW - 100,
-		font = fLight, fontSize = 20, align = "left"
+	posY = posY + 35
+	
+	local line1 = display.newLine( 0, posY, intW, posY )
+	line1:setStrokeColor( unpack(cGreenWater) )
+	line1.strokeWidth = 2
+	line1.alpha = .6
+	svGuardAssig:insert(line1)
+	
+	-- administrativo
+	posY = posY + 25
+	
+	local lblPhoneAdmin0 = display.newText({
+		text = "Teléfono Administracion",
+		y = posY ,x = midW - 35, width = intW - 100,
+		font = fRegular, fontSize = 18, align = "left"
 	})
-	lblBusiness:setFillColor( unpack(cDarkBlue) )
-	grpGuardAssi:insert(lblBusiness)
+	lblPhoneAdmin0:setFillColor( unpack(cDarkBlue) )
+	svGuardAssig:insert(lblPhoneAdmin0)
+	
+	posY = posY + 35
+	local lblPhoneAdmin = display.newText({
+		text = itemsGuard.telAdministracion,
+		y = posY ,x = midW - 35, width = intW - 100,
+		font = fBold, fontSize = 26, align = "left"
+	})
+	lblPhoneAdmin:setFillColor( unpack(cDarkBlue) )
+	svGuardAssig:insert(lblPhoneAdmin)
+	
+	local iconPhone = display.newImage( "img/btn/llamar.png" )
+	iconPhone:translate( svGuardAssig.contentWidth - 50 , posY )
+	iconPhone:setFillColor( unpack(cDarkBlue) )
+	iconPhone.phone = itemsGuard.telAdministracion
+	svGuardAssig:insert( iconPhone )
+	iconPhone:addEventListener( 'tap', callPhone )
+	
+	posY = posY + 35
+	local lblAttentionSchedule = display.newText({
+		text = "Horarios de Atención:",
+		y = posY ,x = midW - 35, width = intW - 100,
+		font = fLight, fontSize = 16, align = "left"
+	})
+	lblAttentionSchedule:setFillColor( unpack(cDarkBlue) )
+	svGuardAssig:insert(lblAttentionSchedule)
+	lblAttentionSchedule.alpha = .85
+	
+	posY = posY + 10
+	local lblAttentionSchedule0 = display.newText({
+		text = "Lunes a viernes de 09:00 a 17:00 \nSabados de 9:00 a 14:00 \n Domingos N/A",
+		y = posY ,x = midW - 35, width = intW - 100,
+		font = fLight, fontSize = 16, align = "left"
+	})
+	lblAttentionSchedule0:setFillColor( unpack(cDarkBlue) )
+	svGuardAssig:insert(lblAttentionSchedule0)
+	lblAttentionSchedule0.anchorY = 0
+	lblAttentionSchedule0.alpha = .85
+	
+	posY = posY + 80
+	
+	local line1 = display.newLine( 0, posY, intW, posY )
+	line1:setStrokeColor( unpack(cGreenWater) )
+	line1.strokeWidth = 2
+	line1.alpha = .6
+	svGuardAssig:insert(line1)
+	
+	-- caseta
+	
+	posY = posY + 25
+	
+	local lblPhoneLobby0 = display.newText({
+		text = "Teléfono de Lobby",
+		y = posY ,x = midW - 35, width = intW - 100,
+		font = fRegular, fontSize = 18, align = "left"
+	})
+	lblPhoneLobby0:setFillColor( unpack(cDarkBlue) )
+	svGuardAssig:insert(lblPhoneLobby0)
+	
+	posY = posY + 35
+	
+	local lblPhoneLobby = display.newText({
+		text = itemsGuard.telLobby,
+		y = posY ,x = midW - 35, width = intW - 100,
+		font = fBold, fontSize = 26, align = "left"
+	})
+	lblPhoneLobby:setFillColor( unpack(cDarkBlue) )
+	svGuardAssig:insert(lblPhoneLobby)
+	
+	local iconPhone = display.newImage( "img/btn/llamar.png" )
+	iconPhone:translate( svGuardAssig.contentWidth - 50 , posY )
+	iconPhone:setFillColor( unpack(cDarkBlue) )
+	iconPhone.phone = itemsGuard.telLobby
+	svGuardAssig:insert( iconPhone )
+	iconPhone:addEventListener( 'tap', callPhone )
+	
+	posY = posY + 35
+	
+	local line1 = display.newLine( 0, posY, intW, posY )
+	line1:setStrokeColor( unpack(cGreenWater) )
+	line1.strokeWidth = 2
+	line1.alpha = .6
+	svGuardAssig:insert(line1)
+	
+	
 	
 	tools:setLoading( false, grpLoading )
 	

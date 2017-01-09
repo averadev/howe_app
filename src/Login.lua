@@ -206,6 +206,8 @@ function scene:create( event )
 	
 	posY = posY + 100
 	
+	
+	--btn login facebook
 	local btnRegister = display.newRect( midW, posY, intW - 96, 64 )
     btnRegister:setFillColor( unpack(cGrayL) )   
 	btnRegister.fill = gGreenBlue
@@ -213,15 +215,18 @@ function scene:create( event )
     grpLogIn:insert(btnRegister)
 	btnRegister:addEventListener( 'tap', gotoScreen )
 	
+	local btnRegister0 = display.newRect( midW, posY, intW - 100, 60 )
+    btnRegister0:setFillColor( unpack(cWhite) )
+    grpLogIn:insert(btnRegister0)
+	
 	local lblRegister = display.newText({
 		text = "REGISTRARSE",
 		y = posY,x = midW,
 		font = fRegular, fontSize = 25, align = "center"
 	})
-	lblRegister:setFillColor( unpack(cWhite) )
+	lblRegister:setFillColor( unpack(cBlack) )
 	grpLogIn:insert(lblRegister)
 	
-    
 end	
 -- Called immediately after scene has moved onscreen:
 function scene:show( event )
