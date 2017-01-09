@@ -14,7 +14,11 @@ local DBManager = require('src.resources.DBManager')
 local isUser = DBManager.setupSquema()
 
 if not isUser then
-	composer.gotoScene( "src.UserType" )
+	--composer.gotoScene( "src.LoginFacebook" )
+	composer.gotoScene( "src.LoginFacebook", {
+		time = 400,
+		effect = "crossFade"
+	})
 else
 	--composer.gotoScene( "src.Visits" )
 	composer.gotoScene( "src.Home", {
