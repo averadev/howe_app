@@ -201,22 +201,22 @@ function ChangeVisitTracking(i, action)
 	if ( action == 2 ) then
 		lblAccepted.text = "VISITA ACEPTADA"
 		
-		local iconAccepted = display.newImage( "img/btn/icono_seleccionado.png" )
+		--[[local iconAccepted = display.newImage("img/btn/icono_seleccionado.png")
 		iconAccepted:translate( -95, 70 )
 		container[i]:insert( iconAccepted )
 		iconAccepted.height = 30
 		iconAccepted.width = 30
-		iconAccepted:setFillColor( unpack(cWhite) ) 
+		iconAccepted:setFillColor( unpack(cWhite) ) ]]
 		
 	elseif ( action == 3 ) then
 		lblAccepted.text = "VISITA RECHAZADA"
 		
-		local iconAccepted = display.newImage( "img/btn/logout.png" )
+		--[[local iconAccepted = display.newImage("img/btn/logout.png" )
 		iconAccepted:translate( -95, 70 )
 		container[i]:insert( iconAccepted )
 		iconAccepted.height = 30
 		iconAccepted.width = 30
-		iconAccepted:setFillColor( unpack(cWhite) ) 
+		iconAccepted:setFillColor( unpack(cWhite) ) ]]
 	end
 	
 	
@@ -321,11 +321,11 @@ function createVisits( i, srvW, posY )
 		grpTracing[i]:insert(btnReject)
 		btnReject:addEventListener( 'tap', VisitTracking )
 			
-		local iconReject = display.newImage( "img/btn/logout.png" )
+		--[[local iconReject = display.newImage("img/btn/logout.png")
 		iconReject:translate( -157, 70 )
 		grpTracing[i]:insert( iconReject )
 		iconReject.height = 30
-		iconReject.width = 30
+		iconReject.width = 30]]
 		
 		local lbl1 = display.newText({
 			text = "RECHAZAR",
@@ -345,12 +345,12 @@ function createVisits( i, srvW, posY )
 		grpTracing[i]:insert(btnAccept)
 		btnAccept:addEventListener( 'tap', VisitTracking )
 			
-		local iconAccept = display.newImage( "img/btn/aceptar.png" )
+		--[[local iconAccept = display.newImage("img/btn/aceptar.png")
 		iconAccept:translate( 35, 70 )
 		grpTracing[i]:insert( iconAccept )
 		iconAccept.height = 30
 		iconAccept.width = 30
-		iconAccept:setFillColor( unpack(cWhite) ) 
+		iconAccept:setFillColor( unpack(cWhite) ) ]]
 			
 		local lbl1 = display.newText({
 			text = "ACEPTAR",
@@ -384,30 +384,24 @@ function createVisits( i, srvW, posY )
 		if ( item.action == '2' ) then
 			lblAccepted.text = "VISITA ACEPTADA"
 			
-			local iconAccepted = display.newImage( "img/btn/icono_seleccionado.png" )
+			--[[local iconAccepted = display.newImage("img/btn/icono_seleccionado.png")
 			iconAccepted:translate( -95, 70 )
 			container[i]:insert( iconAccepted )
 			iconAccepted.height = 30
 			iconAccepted.width = 30
-			iconAccepted:setFillColor( unpack(cWhite) ) 
+			iconAccepted:setFillColor( unpack(cWhite) ) ]]
 			
 		elseif ( item.action == '3' ) then
 			lblAccepted.text = "VISITA RECHAZADA"
 			
-			local iconAccepted = display.newImage( "img/btn/logout.png" )
+			--[[local iconAccepted = display.newImage("img/btn/logout.png")
 			iconAccepted:translate( -95, 70 )
 			container[i]:insert( iconAccepted )
 			iconAccepted.height = 30
 			iconAccepted.width = 30
-			iconAccepted:setFillColor( unpack(cWhite) ) 
+			iconAccepted:setFillColor( unpack(cWhite) ) ]]
 			
 		end
-		local iconAccepted = display.newImage( iconName )
-		iconAccepted:translate( -95, 70 )
-		container[i]:insert( iconAccepted )
-		iconAccepted.height = 30
-		iconAccepted.width = 30
-		iconAccepted:setFillColor( unpack(cWhite) ) 
 	
 	end
 	
@@ -423,14 +417,14 @@ function createVisits( i, srvW, posY )
 	grpDelete:insert(bgCheckV)
 	bgCheckV:addEventListener( 'tap', changeCheckBoxV )
 	
-	btnCheckOutV[i] = display.newImage( "img/btn/icono_paraseleccionar.png" )
+	btnCheckOutV[i] = display.newImage("img/btn/icono_paraseleccionar.png")
 	btnCheckOutV[i].name = "CheckOut"
 	btnCheckOutV[i].height = 30
 	btnCheckOutV[i].width = 30
 	btnCheckOutV[i]:translate( srvW - 55 , posY + 85 )
 	grpDelete:insert( btnCheckOutV[i] )
 		
-	btnCheckInV[i] = display.newImage( "img/btn/icono_seleccionado.png" )
+	btnCheckInV[i] = display.newImage("img/btn/icono_seleccionado.png" )
 	btnCheckInV[i].name = "CheckIn"
 	btnCheckInV[i].height = 30
 	btnCheckInV[i].width = 30
