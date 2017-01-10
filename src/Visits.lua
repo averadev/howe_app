@@ -200,17 +200,25 @@ function ChangeVisitTracking(i, action)
 	local iconName = ""
 	if ( action == 2 ) then
 		lblAccepted.text = "VISITA ACEPTADA"
-		iconName = "img/btn/icono_seleccionado.png"
+		
+		local iconAccepted = display.newImage( "img/btn/icono_seleccionado.png" )
+		iconAccepted:translate( -95, 70 )
+		container[i]:insert( iconAccepted )
+		iconAccepted.height = 30
+		iconAccepted.width = 30
+		iconAccepted:setFillColor( unpack(cWhite) ) 
+		
 	elseif ( action == 3 ) then
 		lblAccepted.text = "VISITA RECHAZADA"
-		iconName = "img/btn/logout.png"
+		
+		local iconAccepted = display.newImage( "img/btn/logout.png" )
+		iconAccepted:translate( -95, 70 )
+		container[i]:insert( iconAccepted )
+		iconAccepted.height = 30
+		iconAccepted.width = 30
+		iconAccepted:setFillColor( unpack(cWhite) ) 
 	end
-	local iconAccepted = display.newImage( iconName )
-	iconAccepted:translate( -95, 70 )
-	container[i]:insert( iconAccepted )
-	iconAccepted.height = 30
-	iconAccepted.width = 30
-	iconAccepted:setFillColor( unpack(cWhite) ) 
+	
 	
 	
 end
@@ -375,10 +383,24 @@ function createVisits( i, srvW, posY )
 		local iconName = ""
 		if ( item.action == '2' ) then
 			lblAccepted.text = "VISITA ACEPTADA"
-			iconName = "img/btn/icono_seleccionado.png"
+			
+			local iconAccepted = display.newImage( "img/btn/icono_seleccionado.png" )
+			iconAccepted:translate( -95, 70 )
+			container[i]:insert( iconAccepted )
+			iconAccepted.height = 30
+			iconAccepted.width = 30
+			iconAccepted:setFillColor( unpack(cWhite) ) 
+			
 		elseif ( item.action == '3' ) then
 			lblAccepted.text = "VISITA RECHAZADA"
-			iconName = "img/btn/logout.png"
+			
+			local iconAccepted = display.newImage( "img/btn/logout.png" )
+			iconAccepted:translate( -95, 70 )
+			container[i]:insert( iconAccepted )
+			iconAccepted.height = 30
+			iconAccepted.width = 30
+			iconAccepted:setFillColor( unpack(cWhite) ) 
+			
 		end
 		local iconAccepted = display.newImage( iconName )
 		iconAccepted:translate( -95, 70 )
