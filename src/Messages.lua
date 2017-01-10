@@ -216,7 +216,6 @@ function createMessages( i, srvW, posY )
 	bgCheckA.id = itemsAdmin[i].idXref
 	bgCheckA.posc = itemsAdmin[i].posc
 	bgCheckA.alpha = .02
-	bgCheckA.alpha = .8
 	grpDelete:insert( bgCheckA )
 	bgCheckA:addEventListener( 'tap', changeCheckBoxM )
 		

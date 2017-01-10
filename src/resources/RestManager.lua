@@ -405,8 +405,28 @@ local RestManager = {}
 	
 	end
 	
-	RestManager.updateVisitAction = function()
-		returnVisitTracking()
+	RestManager.updateVisitAction = function( idMSG, action, posc )
+		reloadConfig()
+        -- Set url
+        local url = dbConfig.url
+        url = url.."api/updateVisitAction/format/json"
+        url = url.."/idMSG/".. idMSG
+        url = url.."/action/".. action
+	
+        local function callback(event)
+             if ( event.isError ) then
+            else
+                local data = json.decode(event.response)
+				if data.success then
+					ChangeVisitTracking( posc, action )
+                else
+					
+                end
+            end
+            return true
+        end
+        -- Do request
+        network.request( url, "GET", callback )
 	end
 	
 	--obtiene el mensaje de visitante por id
@@ -471,6 +491,45 @@ local RestManager = {}
         -- Do request
         network.request( url, "GET", callback )
 		
+	end
+	
+	--------------------------------- logout ----------------------------------
+	
+	RestManager.deletePlayerIdOfUSer = function()
+	
+		reloadConfig()
+        -- Set url
+        local url = dbConfig.url
+        url = url.."api/deletePlayerIdOfUSer/format/json"
+        url = url.."/idApp/"..dbConfig.idApp
+		url = url.."/condominioId/"..dbConfig.condominioId
+		--url = url.."/playerId/"..urlencode('hola')
+	
+        local function callback(event)
+            if ( event.isError ) then
+            else
+                local data = json.decode(event.response)
+                if data.success then
+					local items = data.items
+					
+					--getMessageSignIn(data.message, 1)
+					timeMarker = timer.performWithDelay( 1000, function()
+						--deleteMessageSignIn()
+						SignOut2()
+					end, 1 )
+					
+                else
+					--getMessageSignIn(data.message, 2)
+					timeMarker = timer.performWithDelay( 2000, function()
+						--deleteMessageSignIn()
+					end, 1 )
+                end
+            end
+            return true
+        end
+        -- Do request
+        network.request( url, "GET", callback ) 
+	
 	end
 	
 return RestManager

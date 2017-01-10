@@ -31,10 +31,9 @@ local btnLogin
 -- FUNCIONES
 ---------------------------------------------------------------------------------
 
-function alertLogin()
-	
-	
-	
+function closeKeyboard()
+	native.setKeyboardFocus( nil )
+	return true
 end
 
 function goToHome()
@@ -56,7 +55,6 @@ function gotoScreen( event )
 	timer.performWithDelay( 100, function() 
 		t.alpha = 1  
 		composer.removeScene( "src."..t.screen )
-		--composer.gotoScene("src."..t.screen )
         composer.gotoScene("src."..t.screen, { time = 400, effect = "fromRight" } )
 	end )
 	return true
@@ -110,9 +108,11 @@ function scene:create( event )
 	screen = self.view
     --screen.y = h
     
-    local o = display.newRect( midW, midH + h, intW+8, intH )
+    local o = display.newRect( midW, h, intW+8, intH )
     o:setFillColor( unpack(cWhite) )   
     screen:insert(o)
+	o:addEventListener( 'tap', closeKeyboard )
+	o.anchorY = 0
 	
 	--header
 	tools:buildHeaderLogin()
@@ -156,11 +156,12 @@ function scene:create( event )
     bgUser1:setFillColor( unpack(cWhite) )
     grpTextFieldL:insert(bgUser1)
 	
-	txtEmail = native.newTextField( midW, posY,  intW - 100, 60 )
+	txtEmail = native.newTextField( midW, posY,  intW - 120, 60 )
     txtEmail.inputType = "email"
 	txtEmail.name = "email"
     txtEmail.hasBackground = false
 	txtEmail.placeholder = "USUARIO"
+	txtEmail:setTextColor( unpack(cDarkBlue) )
 	txtEmail.size = 25
     txtEmail:addEventListener( "userInput", onTxtFocus )
 	grpTextFieldL:insert(txtEmail)
@@ -177,12 +178,13 @@ function scene:create( event )
     bgPass1:setFillColor( unpack(cWhite) )
     grpTextFieldL:insert(bgPass1)
 	
-	txtPass = native.newTextField( midW, posY,  intW - 100, 60 )
+	txtPass = native.newTextField( midW, posY,  intW - 120, 60 )
     txtPass.inputType = "default"
     txtPass.hasBackground = false
 	txtPass.name = "password"
 	txtPass.placeholder = "CONTRASEÑA"
 	txtPass.isSecure = true
+	txtPass:setTextColor( unpack(cDarkBlue) )
 	txtPass.size = 25
     txtPass:addEventListener( "userInput", onTxtFocus )
 	grpTextFieldL:insert(txtPass)
@@ -224,7 +226,7 @@ function scene:create( event )
 		y = posY,x = midW,
 		font = fRegular, fontSize = 25, align = "center"
 	})
-	lblRegister:setFillColor( unpack(cBlack) )
+	lblRegister:setFillColor( unpack(cDarkBlue) )
 	grpLogIn:insert(lblRegister)
 	
 end	
@@ -235,6 +237,7 @@ end
 
 -- Hide Scene
 function scene:hide( event )
+	native.setKeyboardFocus( nil )
 	if ( event.phase == "will" ) then
 		if grpTextFieldL then
 			grpTextFieldL:removeSelf()

@@ -16,14 +16,14 @@ function Tools:new()
     local self = display.newGroup()
 	local grpLoading
     local bgShadow, iconPlaying
-    self.y = h
+    --self.y = h
 	
 	-------------------------------------
     -- Creamos el header de login
     ------------------------------------ 
     function self:buildHeaderLogin()
 	
-        local toolbar = display.newRect( 0, 0, display.contentWidth, 70 )
+        local toolbar = display.newRect( 0, h, display.contentWidth, 70 )
         toolbar.anchorX = 0
         toolbar.anchorY = 0
         --toolbar:setFillColor( unpack(cBluen) )
@@ -32,7 +32,7 @@ function Tools:new()
 
         local lblLogo = display.newText({
 			text = "HOWE",
-			y = 35 ,x = midW,
+			y = 35 + h ,x = midW,
 			font = fBold, fontSize = 25, align = "center"
 		})
 		lblLogo:setFillColor( unpack(cWhite) )
@@ -41,7 +41,7 @@ function Tools:new()
 		local currScene = composer.getSceneName( "current" )
 		if ( currScene == "src.SignIn" or currScene == "src.Login"  ) then
 			local iconBack = display.newImage("img/btn/regresar.png")
-			iconBack:translate( 40 , 35 )
+			iconBack:translate( 40 , 35 + h )
 			if ( currScene == "src.Login"  ) then
 				iconBack.screen = "LoginFacebook"
 			elseif ( currScene == "src.SignIn" ) then
@@ -59,7 +59,7 @@ function Tools:new()
     ------------------------------------ 
     function self:buildHeader()
 	
-		local lastY = 0
+		local lastY = h
         
         local bgToolbar = display.newRect( 0, lastY, display.contentWidth, 70 )
         bgToolbar.anchorX = 0
@@ -87,7 +87,6 @@ function Tools:new()
 		self:insert( iconHome )
 		iconHome:addEventListener( 'tap', toScreen )
 		
-		
         local lblLogo = display.newText({
 			text = "RESIDENCIAL ALBORADA",
 			y = 35 + lastY,x = midW + 25,
@@ -103,7 +102,7 @@ function Tools:new()
     -----------------------------------------------
 	function self:buildTooLeft()
 	
-		local lastY = 0
+		local lastY = h
 	
 		local scvToolbar = widget.newScrollView({
 			top = 70 + lastY,
@@ -133,7 +132,7 @@ function Tools:new()
 		
 		local lastY = 0
 		
-		local optionTool = { "GuardAssigned", "Messages", "Visits", "Report", "Invitation", "Pass", "Alert" }
+		local optionTool = { "GuardAssigned", "Messages", "Visits", "Report", "Invitation", "Pass", "Logout" }
 		local iconTool = { "guardia.png", "message.png", "vistas.png", "reportes.png", "invitaciones.png", "llamar.png", "logout.png" }
 		local optionLabel = { "GUARDIA EN TURNO", "MENSAJES", "VISITAS", "REPORTES", "", "NUMERO DE EMERGENCIA", "CERRAR SESIÓN" }
 		local optionSubLabel = { "Comunicáte a Caseta", "Enviar mensaje a Administración", "Agenda y Solicita visitas programadas", 
@@ -179,7 +178,7 @@ function Tools:new()
     ------------------------------------ ----------
 	function self:buildTooLeftHome()
 	
-		local lastY = 0
+		local lastY = h
 	
 		local scvToolbar = widget.newScrollView({
 			top = 70 + lastY,
@@ -207,7 +206,7 @@ function Tools:new()
 		lineScv.alpha = .6
 		self:insert(lineScv)
 		
-		local optionTool = { "GuardAssigned", "Messages", "Visits", "Report", "Invitation", "Pass", "Alert" }
+		local optionTool = { "GuardAssigned", "Messages", "Visits", "Report", "Invitation", "Pass", "Logout" }
 		local iconTool = { "guardia.png", "message.png", "vistas.png", "reportes.png", "invitaciones.png", "llamar.png", "logout.png" }
 		local optionLabel = { "GUARDIA EN TURNO", "MENSAJES", "VISITAS", "REPORTES", "", "NUMERO DE EMERGENCIA", "CERRAR SESIÓN" }
 		local optionSubLabel = { "Comunicáte a Caseta", "Enviar mensaje a Administración", "Agenda y Solicita visitas programadas", 

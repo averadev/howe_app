@@ -102,8 +102,10 @@ function scene:create( event )
 	
 	posY = posY + 150
 	
+	print(intW - 100)
+	
 	--btn login facebook
-	local btnLoginFace = display.newRect( midW, posY, intW - 96, 64 )
+	--[[local btnLoginFace = display.newRect( midW, posY, intW - 96, 64 )
     btnLoginFace:setFillColor( unpack(cGrayL) )   
 	btnLoginFace.fill = gGreenBlue
     grpLoginFace:insert(btnLoginFace)
@@ -119,7 +121,11 @@ function scene:create( event )
 	})
 	lblLogin:setFillColor( unpack(cBlack) )
 	lblLogin.fill = gGreenBlue
-	grpLoginFace:insert(lblLogin)
+	grpLoginFace:insert(lblLogin)]]
+	
+	local btnLoginFace = display.newImage("img/btn/facebook.png")
+	btnLoginFace:translate( midW , posY)
+	grpLoginFace:insert( btnLoginFace )
 	
 	posY = posY + 125
 	
@@ -135,13 +141,13 @@ function scene:create( event )
 		y = posY,x = midW,
 		font = fLight, fontSize = 22, align = "center"
 	})
-	lblLogin:setFillColor( unpack(cBlack) )
+	lblLogin:setFillColor( unpack(cDarkBlue) )
 	grpLoginFace:insert(lblLogin)
 	
 	posY = posY + 12
 	
-	local lineLogin = display.newLine( 65, posY, 410, posY )
-	lineLogin:setStrokeColor( unpack(cBlack) )
+	local lineLogin = display.newLine( 73, posY, 403, posY )
+	lineLogin:setStrokeColor( unpack(cDarkBlue) )
 	lineLogin.strokeWidth = 2
 	grpLoginFace:insert(lineLogin)
 	

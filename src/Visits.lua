@@ -24,7 +24,9 @@ local scene = composer.newScene()
 local tools
 local svVisits
 local grpSvVisits = display.newGroup()
-local grpBtnSvVisits = display.newGroup()
+local grpDelete = display.newGroup()
+local grpEdit = display.newGroup()
+local grpBtnDelete = display.newGroup()
 
 local dbConfig = DBManager.getSettings()
 -- Variables
@@ -37,6 +39,11 @@ local idDeleteV = {}
 local itemsVisit = {}
 local noLeido = {}
 local visits = {}
+local container = {}
+local btnCheckOutV = {}
+local btnCheckInV = {}
+local grpTracing = {}
+	
 
 ---------------------------------------------------------------------------------
 -- FUNCIONES
@@ -65,11 +72,11 @@ function showBtnDeleteVisit(isTrue, isActive, idVisit, posc)
 	
 	if isTrue then
 		grpSvVisits.y = 80
-		grpBtnSvVisits.alpha = 1
+		grpDelete.alpha = 1
 		svVisits:setScrollHeight(posY + 80)
 	else
 		grpSvVisits.y = 0
-		grpBtnSvVisits.alpha = 0
+		grpDelete.alpha = 0
 		svVisits:setScrollHeight(posY)
 	end
 	if isActive then
@@ -96,10 +103,17 @@ end
 --obtiene los mensajes de las visitas
 function refreshMessageVisit()
 	grpSvVisits:removeSelf();
-	grpBtnSvVisits:removeSelf();
+	grpDelete:removeSelf();
+	grpEdit:removeSelf();
+	grpBtnDelete:removeSelf();
+	
 	grpSvVisits = display.newGroup()
-	grpBtnSvVisits = display.newGroup()
+	grpDelete = display.newGroup()
+	grpEdit = display.newGroup()
+	grpBtnDelete = display.newGroup()
+	
 	RestManager.getMessageToVisit()
+	tools:setLoading( false, grpLoading )
 end
 
 function markRead( event )
@@ -116,6 +130,306 @@ function markRead( event )
 end
 
 
+function showCheckBoxV( event )
+	grpDelete.alpha = 1
+	grpBtnDelete.alpha = 1
+	grpEdit.alpha = 0
+	return true
+end
+
+function hideCheckBoxV( event )
+	grpDelete.alpha = 0
+	grpBtnDelete.alpha = 0
+	grpEdit.alpha = 1
+	return true
+end
+
+function changeCheckBoxV( event )
+
+	local t = event.target
+	
+	local active
+		if t.check == 0 then
+		btnCheckOutV[t.posc].alpha = 0
+		btnCheckInV[t.posc].alpha = 1
+		t.check = 1
+		--contDeleteAdmin = contDeleteAdmin + 1
+		idDeleteV[t.posc] = t.id
+		active = true
+	else
+		btnCheckInV[t.posc].alpha = 0
+		btnCheckOutV[t.posc].alpha = 1
+		t.check = 0
+		--contDeleteAdmin = contDeleteAdmin - 1
+		active = false
+		idDeleteV[t.posc] = 0
+	end
+	
+	return true
+	
+end
+
+function VisitTracking( event )
+	local t = event.target
+	RestManager.updateVisitAction( t.id, t.action, t.posc )
+end
+
+function ChangeVisitTracking(i, action)
+	
+	grpTracing[i]:removeSelf()
+	grpTracing[i] = display.newGroup()
+	container[i]:insert( grpTracing[i] )
+	
+	local bgAccepted = display.newRect( 0, 70, 360, 60 )
+	bgAccepted:setFillColor( unpack( cWhite) )   
+	bgAccepted.fill = gGreenBlue
+	container[i]:insert(bgAccepted)
+				
+	local btnAccepted = display.newRect( 0, 70, 358, 58 )
+	btnAccepted:setFillColor( unpack( cWhite) )
+	container[i]:insert(btnAccepted)
+			
+	local lblAccepted = display.newText({
+		text = "",
+		x = 15, y = 70,
+		width = 360,
+		font = fRegular, fontSize = 18, align = "center"
+	})
+	lblAccepted:setFillColor( unpack( cDarkBlue ) )
+	container[i]:insert(lblAccepted)
+	local iconName = ""
+	if ( action == 2 ) then
+		lblAccepted.text = "VISITA ACEPTADA"
+		iconName = "img/btn/icono_seleccionado.png"
+	elseif ( action == 3 ) then
+		lblAccepted.text = "VISITA RECHAZADA"
+		iconName = "img/btn/logout.png"
+	end
+	local iconAccepted = display.newImage( iconName )
+	iconAccepted:translate( -95, 70 )
+	container[i]:insert( iconAccepted )
+	iconAccepted.height = 30
+	iconAccepted.width = 30
+	iconAccepted:setFillColor( unpack(cWhite) ) 
+	
+	
+end
+
+function createVisits( i, srvW, posY )
+	
+	local item = itemsVisit[i]
+	
+	container[i] = display.newContainer( srvW, 220 )
+	container[i].x = srvW/2
+	container[i].y = posY
+	container[i].item = item
+	container[i].id = item.id
+	container[i].posci = i
+	grpSvVisits:insert( container[i] )
+	--container:addEventListener( "tap", showVisit )
+	container[i].anchorY = 0
+	
+	local maxShape = display.newRect( 0, 0, 460, 220 )
+	maxShape:setFillColor( unpack(cGrayL) )
+	maxShape.fill = gGreenBlue
+	container[i]:insert( maxShape )
+
+	local maxShape = display.newRect( 0, 0, 456, 218 )
+	maxShape:setFillColor( unpack(cWhite) )
+	container[i]:insert( maxShape )
+	
+	-- Agregamos textos
+		
+	local txtFecha = display.newText( {
+		text = item.dia .. ", " .. item.fechaFormat,
+		x = 40, y = -90,
+		width = srvW,
+		font = fBoldItalic, fontSize = 18, align = "left",
+	})
+	txtFecha:setFillColor( unpack(cDarkBlue ) )
+	container[i]:insert(txtFecha)
+	
+	local txtHora = display.newText( {
+		text = item.hora,
+		x = -15, y = -90,
+		width = srvW,
+		font = fBoldItalic, fontSize = 18, align = "right",
+	})
+	txtHora:setFillColor( unpack(cDarkBlue ) )
+	container[i]:insert(txtHora)
+	
+	local lbl1 = display.newText({
+		text = "Visitante: ",
+		x = 15, y = -60,
+		width = srvW,
+		font = fRegular, fontSize = 16, align = "left"
+	})
+	lbl1:setFillColor( unpack(cDarkBlue ) )
+	container[i]:insert(lbl1)
+	
+	local txtVisit = display.newText( {
+		text = item.nombreVisitante:sub(1,20),
+		x = 15, y = -50,
+		width = srvW,
+		font = fBold, fontSize = 20, align = "left"
+	})
+	txtVisit:setFillColor( unpack(cDarkBlue ) )
+	container[i]:insert(txtVisit)
+	txtVisit.anchorY = 0
+	
+	local lbl1 = display.newText({
+		text = "Asunto: ",
+		x = 15, y = -10,
+		width = srvW,
+		font = fRegular, fontSize = 16, align = "left"
+	})
+	lbl1:setFillColor( unpack(cDarkBlue ) )
+	container[i]:insert(lbl1)
+
+	local txtInfo = display.newText( {
+		text = item.motivo:sub(1,40),
+		x = 15, y = 3, width = srvW,
+		font = fBold, fontSize = 20, align = "left"
+	})
+	txtInfo:setFillColor( unpack( cDarkBlue ) )
+	container[i]:insert(txtInfo)
+	txtInfo.anchorY = 0
+	
+	if ( item.action == '0' ) then
+		
+		grpTracing[i] = display.newGroup()
+		container[i]:insert( grpTracing[i] )
+		
+		local bgReject = display.newRect( -95, 70, 170, 60 )
+		bgReject:setFillColor( unpack( cWhite) )   
+		bgReject.fill = gGreenBlue
+		grpTracing[i]:insert(bgReject)
+			
+		local btnReject = display.newRect( -95, 70, 168, 58 )
+		btnReject:setFillColor( unpack( cWhite) )
+		btnReject.id = item.id
+		btnReject.action = 3 
+		btnReject.posc = i
+		grpTracing[i]:insert(btnReject)
+		btnReject:addEventListener( 'tap', VisitTracking )
+			
+		local iconReject = display.newImage( "img/btn/logout.png" )
+		iconReject:translate( -157, 70 )
+		grpTracing[i]:insert( iconReject )
+		iconReject.height = 30
+		iconReject.width = 30
+		
+		local lbl1 = display.newText({
+			text = "RECHAZAR",
+			x = -85, y = 70,
+			width = 170,
+			font = fRegular, fontSize = 18, align = "center"
+		})
+		lbl1:setFillColor( unpack( cDarkBlue ) )
+		grpTracing[i]:insert(lbl1)
+			
+		local btnAccept = display.newRect( 95, 70, 170, 60 )
+		btnAccept:setFillColor( unpack(cWhite) )   
+		btnAccept.fill = gGreenBlue
+		btnAccept.id = item.id
+		btnAccept.action = 2
+		btnAccept.posc = i
+		grpTracing[i]:insert(btnAccept)
+		btnAccept:addEventListener( 'tap', VisitTracking )
+			
+		local iconAccept = display.newImage( "img/btn/aceptar.png" )
+		iconAccept:translate( 35, 70 )
+		grpTracing[i]:insert( iconAccept )
+		iconAccept.height = 30
+		iconAccept.width = 30
+		iconAccept:setFillColor( unpack(cWhite) ) 
+			
+		local lbl1 = display.newText({
+			text = "ACEPTAR",
+			x = 105, y = 70,
+			width = 170,
+			font = fRegular, fontSize = 18, align = "center"
+		})
+		lbl1:setFillColor( unpack( cWhite ) )
+		grpTracing[i]:insert(lbl1)
+		
+	else
+	
+		local bgAccepted = display.newRect( 0, 70, 360, 60 )
+		bgAccepted:setFillColor( unpack( cWhite) )   
+		bgAccepted.fill = gGreenBlue
+		container[i]:insert(bgAccepted)
+				
+		local btnAccepted = display.newRect( 0, 70, 358, 58 )
+		btnAccepted:setFillColor( unpack( cWhite) )
+		container[i]:insert(btnAccepted)
+			
+		local lblAccepted = display.newText({
+			text = "",
+			x = 15, y = 70,
+			width = 360,
+			font = fRegular, fontSize = 18, align = "center"
+		})
+		lblAccepted:setFillColor( unpack( cDarkBlue ) )
+		container[i]:insert(lblAccepted)
+		local iconName = ""
+		if ( item.action == '2' ) then
+			lblAccepted.text = "VISITA ACEPTADA"
+			iconName = "img/btn/icono_seleccionado.png"
+		elseif ( item.action == '3' ) then
+			lblAccepted.text = "VISITA RECHAZADA"
+			iconName = "img/btn/logout.png"
+		end
+		local iconAccepted = display.newImage( iconName )
+		iconAccepted:translate( -95, 70 )
+		container[i]:insert( iconAccepted )
+		iconAccepted.height = 30
+		iconAccepted.width = 30
+		iconAccepted:setFillColor( unpack(cWhite) ) 
+	
+	end
+	
+	-- checkbox
+	local bgCheckV = display.newRect( -175, -15, 50, 50 )
+	bgCheckV:translate( srvW + 120, posY + 100 )
+	bgCheckV:setFillColor( unpack( cWhite ) )
+	bgCheckV.check = 0
+	bgCheckV.name = "checkbox"
+	bgCheckV.id = item.id
+	bgCheckV.posc = item.posc
+	bgCheckV.alpha = .02
+	grpDelete:insert(bgCheckV)
+	bgCheckV:addEventListener( 'tap', changeCheckBoxV )
+	
+	btnCheckOutV[i] = display.newImage( "img/btn/icono_paraseleccionar.png" )
+	btnCheckOutV[i].name = "CheckOut"
+	btnCheckOutV[i].height = 30
+	btnCheckOutV[i].width = 30
+	btnCheckOutV[i]:translate( srvW - 55 , posY + 85 )
+	grpDelete:insert( btnCheckOutV[i] )
+		
+	btnCheckInV[i] = display.newImage( "img/btn/icono_seleccionado.png" )
+	btnCheckInV[i].name = "CheckIn"
+	btnCheckInV[i].height = 30
+	btnCheckInV[i].width = 30
+	btnCheckInV[i]:translate( srvW - 55 , posY + 85  )
+	btnCheckInV[i].alpha = 0
+	grpDelete:insert( btnCheckInV[i] )
+	
+	-- mensajes no leidos
+	noLeido[i] = display.newCircle( 20, posY + 20, 12 )
+	noLeido[i]:setFillColor( 0.5 )
+	noLeido[i].fill = gGreenBlue
+	grpSvVisits:insert(noLeido[i])
+		
+	if itemsVisit[i].leido == "0" then
+		container[i]:addEventListener( 'tap', markRead )
+	else
+		noLeido[i].alpha = 0
+	end
+	
+end
+
 function buildVisitItems()
 	
 	posY = 40
@@ -123,24 +437,29 @@ function buildVisitItems()
 	local srvH = svVisits.contentHeight
 	
 	svVisits:insert(grpSvVisits)
-	svVisits:insert(grpBtnSvVisits)
+	svVisits:insert(grpDelete)
+	grpVisits:insert(grpEdit)
+	grpVisits:insert(grpBtnDelete)
 	
 	--svContent:insert(groupSvContent)
 	--svContent:insert(groupBtnSvContent)
 	
-	grpBtnSvVisits.alpha = 0
+	grpBtnDelete.alpha = 0
+	grpDelete.alpha = 0
 	
 	posY = h + 100
-
+	
+	-- btn edit
+	
 	local bgEdit = display.newRect( midW + 40, posY, srvW - 200, 35 )
     bgEdit:setFillColor( unpack(cWhite) )   
 	bgEdit.fill = gGreenBlue
-    grpVisits:insert(bgEdit)
+    grpEdit:insert(bgEdit)
 	
 	btnEdit = display.newRect( midW + 40, posY, srvW - 202, 33 )
     btnEdit:setFillColor( unpack(cWhite) ) 
-    grpVisits:insert(btnEdit)
-	btnEdit:addEventListener( 'tap', deleteVisit )
+    grpEdit:insert(btnEdit)
+	btnEdit:addEventListener( 'tap', showCheckBoxV )
 	
 	local lblEdit = display.newText( {
 		text = "EDITAR",
@@ -148,7 +467,42 @@ function buildVisitItems()
 		font = fRegular, fontSize = 18, align = "center"
 	})
 	lblEdit:setFillColor( unpack(cDarkBlue) )
-	grpVisits:insert(lblEdit)
+	grpEdit:insert(lblEdit)
+	
+	-- btn delete and cancel
+	
+	local btnCancelEdit = display.newRect( srvW / 2 - 10, posY, srvW / 2 - 40, 35 )
+    btnCancelEdit:setFillColor( unpack( cWhite ) )
+    grpBtnDelete:insert(btnCancelEdit)
+	btnCancelEdit:addEventListener( 'tap', hideCheckBoxV )
+	
+	local lblCancelEdit  = display.newText( {
+		text = "CANCELAR",
+		x = srvW / 2 - 10, y = posY,
+		font = fRegular, fontSize = 18, align = "center"
+	})
+	lblCancelEdit:setFillColor( unpack( cDarkBlue ) )
+	grpBtnDelete:insert(lblCancelEdit)
+	
+	local bgAcceptEdit = display.newRect( srvW  - 20, posY, srvW / 2 - 40, 35 )
+    bgAcceptEdit:setFillColor( unpack(cWhite) )   
+	bgAcceptEdit.fill = gGreenBlue
+    grpBtnDelete:insert(bgAcceptEdit)
+	
+	local btnAcceptEdit = display.newRect( srvW  - 20, posY, srvW / 2 - 42, 33 )
+    btnAcceptEdit:setFillColor( unpack(cWhite) )
+    grpBtnDelete:insert(btnAcceptEdit)
+	btnAcceptEdit:addEventListener( 'tap', deleteVisit )
+	
+	local lblAcceptEdit  = display.newText( {
+		text = "ACEPTAR",
+		x = srvW  - 20 , y = posY,
+		font = fRegular, fontSize = 18, align = "center"
+	})
+	lblAcceptEdit:setFillColor( unpack( cDarkBlue ) )
+	grpBtnDelete:insert(lblAcceptEdit)
+	
+	-- items
 	
 	posY = 0
 	
@@ -158,12 +512,14 @@ function buildVisitItems()
 		idDeleteV[y] = 0
         itemsVisit[y].posc = y
 		
-		local visit = Visit:new()
+		createVisits( y, srvW, posY )
+		
+		--[[local visit = Visit:new()
 		grpSvVisits:insert(visit)
 		visit:build( itemsVisit[y], srvW )
 		visit.y = posY
 		visit.id = itemsVisit[y].id
-		visit.posci = y
+		visit.posci = y]]
 		
 		--[[noLeido[y] = display.newCircle( 315, posY + 30, 12 )
 		noLeido[y]:setFillColor( 0.5 )
@@ -183,11 +539,11 @@ function buildVisitItems()
 	--[[local bgDeleteVisits = display.newRect( srvW/2, posY, srvW - 30, 60 )
     bgDeleteVisits:setFillColor( unpack(cWhite) )   
 	bgDeleteVisits.fill = gGreenBlue
-    grpBtnSvVisits:insert(bgDeleteVisits)
+    grpDelete:insert(bgDeleteVisits)
 	
 	btnDeleteVisits = display.newRect( srvW/2, posY, srvW - 34, 56 )
     btnDeleteVisits:setFillColor( unpack(cWhite) ) 
-    grpBtnSvVisits:insert(btnDeleteVisits)
+    grpDelete:insert(btnDeleteVisits)
 	btnDeleteVisits:addEventListener( 'tap', deleteVisit )
 	
 	local txtBtnDeleteVisits = display.newText( {
@@ -196,7 +552,7 @@ function buildVisitItems()
 		font = fRegular, fontSize = 24, align = "center"
 	})
 	txtBtnDeleteVisits:setFillColor( unpack(cDarkBlue) )
-	grpBtnSvVisits:insert(txtBtnDeleteVisits)
+	grpDelete:insert(txtBtnDeleteVisits)
 	
 	for y = 1, #itemsVisit, 1 do
 	

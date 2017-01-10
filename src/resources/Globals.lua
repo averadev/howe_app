@@ -19,8 +19,10 @@ cGrayB = { .88 }
 cWhite = { 1 }
 cGreenWater = { 0, .72, .43 }
 cBluenWater = { 0, .76, .78 }
-cDarkBlue = { .03, .07, .16 }
+--cDarkBlue = { .03, .07, .16 }
+cDarkBlue = { .05, .09, .20 }
 cDarkBlue2 = { .03, .07, .25  }
+cDarkBlue = { .05, .09, .20 }
 
 gGreenBlue = {
     type = "gradient",

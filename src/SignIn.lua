@@ -29,6 +29,11 @@ local btnSignIn
 -- FUNCIONES
 ---------------------------------------------------------------------------------
 
+function closeKeyboard()
+	native.setKeyboardFocus( nil )
+	return true
+end
+
 function gotoScreen( event )
 	local t = event.target
 	t.alpha = .75
@@ -92,6 +97,7 @@ function scene:create( event )
     local o = display.newRect( midW, midH + h, intW+8, intH )
     o:setFillColor( unpack(cWhite) )   
     screen:insert(o)
+	o:addEventListener( 'tap', closeKeyboard )
 	
 	--header
 	tools:buildHeaderLogin()
@@ -139,6 +145,7 @@ function scene:create( event )
     txtEmail.inputType = "email"
     txtEmail.hasBackground = false
 	txtEmail.placeholder = "USUARIO"
+	txtEmail:setTextColor( unpack(cDarkBlue) )
 	txtEmail.size = 25
     txtEmail:addEventListener( "userInput", onTxtFocus )
 	grpTextFieldS:insert(txtEmail)
@@ -159,6 +166,7 @@ function scene:create( event )
     txtPass.inputType = "default"
     txtPass.hasBackground = false
 	txtPass.placeholder = "CONTRASEÑA"
+	txtPass:setTextColor( unpack(cDarkBlue) )
 	txtPass.isSecure = true
 	txtPass.size = 25
     txtPass:addEventListener( "userInput", onTxtFocus )
@@ -180,6 +188,7 @@ function scene:create( event )
     txtRePass.inputType = "default"
     txtRePass.hasBackground = false
 	txtRePass.placeholder = "CONFIRMAR CONTRASEÑA"
+	txtRePass:setTextColor( unpack(cDarkBlue) )
 	txtRePass.isSecure = true
 	txtRePass.size = 25
     txtRePass:addEventListener( "userInput", onTxtFocus )
@@ -212,6 +221,7 @@ end
 
 -- Hide Scene
 function scene:hide( event )
+	native.setKeyboardFocus( nil )
 	if ( event.phase == "will" ) then
 		if grpTextFieldS then
 			grpTextFieldS:removeSelf()

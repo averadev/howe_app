@@ -320,7 +320,7 @@ function Visit:new()
 			grpTracing:insert(btnAccept)
 			btnAccept:addEventListener( 'tap', VisitTracking )
 			
-			local iconAccept = display.newImage( "img/btn/icono_seleccionado.png" )
+			local iconAccept = display.newImage( "img/btn/aceptar.png" )
 			iconAccept:translate( 35, 70 )
 			grpTracing:insert( iconAccept )
 			iconAccept.height = 30

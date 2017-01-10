@@ -135,16 +135,22 @@ function createGuard(existGuard)
 	svGuardAssig:insert(lblGuardAssig)
 	local lblNameGuard = display.newText({
 		text = itemsGuard.nombre .. " " .. itemsGuard.apellidos,
-		y = posY - 10 ,x = midW + 35, width = 235,
-		font = fBold, fontSize = 24, align = "left"
+		y = posY - 15 ,x = midW + 35, width = 235,
+		font = fBold, fontSize = 30, align = "left"
 	})
 	lblNameGuard:setFillColor( unpack(cDarkBlue) )
 	svGuardAssig:insert(lblNameGuard)
 	lblNameGuard.anchorY = 0
 	
-	local location = { "Av. 135 Sm.326, MZ. 1", "Residenciales del sur", "Camcun, Quintana Roo" }
-	
 	posY = posY + 90
+	
+	local iconLocation = display.newImage( "img/btn/lugar.png" )
+	iconLocation:translate( svGuardAssig.contentWidth - 50 , posY + 35 )
+	iconLocation.phone = itemsGuard.telCaseta
+	--iconPhone:setFillColor( unpack(cDarkBlue) )
+	svGuardAssig:insert( iconLocation )
+	
+	local location = { "Av. 135 Sm.326, MZ. 1", "Residenciales del sur", "Camcun, Quintana Roo" }
 	
 	for i = 1, #location, 1 do
 		local lblLocation = display.newText({
@@ -163,7 +169,7 @@ function createGuard(existGuard)
 	
 	local line1 = display.newLine( 0, posY, intW, posY )
 	line1:setStrokeColor( unpack(cGreenWater) )
-	line1.strokeWidth = 2
+	line1.strokeWidth = 1
 	line1.alpha = .6
 	svGuardAssig:insert(line1)
 	
@@ -183,15 +189,15 @@ function createGuard(existGuard)
 	local lblPhoneBooth = display.newText({
 		text = itemsGuard.telCaseta,
 		y = posY ,x = midW - 35, width = intW - 100,
-		font = fBold, fontSize = 26, align = "left"
+		font = fBold, fontSize = 30, align = "left"
 	})
 	lblPhoneBooth:setFillColor( unpack(cDarkBlue) )
 	svGuardAssig:insert(lblPhoneBooth)
 	
-	local iconPhone = display.newImage( "img/btn/llamar.png" )
+	local iconPhone = display.newImage( "img/btn/llamar2.png" )
 	iconPhone:translate( svGuardAssig.contentWidth - 50 , posY )
 	iconPhone.phone = itemsGuard.telCaseta
-	iconPhone:setFillColor( unpack(cDarkBlue) )
+	--iconPhone:setFillColor( unpack(cDarkBlue) )
 	svGuardAssig:insert( iconPhone )
 	iconPhone:addEventListener( 'tap', callPhone )
 	
@@ -199,7 +205,7 @@ function createGuard(existGuard)
 	
 	local line1 = display.newLine( 0, posY, intW, posY )
 	line1:setStrokeColor( unpack(cGreenWater) )
-	line1.strokeWidth = 2
+	line1.strokeWidth = 1
 	line1.alpha = .6
 	svGuardAssig:insert(line1)
 	
@@ -218,14 +224,14 @@ function createGuard(existGuard)
 	local lblPhoneAdmin = display.newText({
 		text = itemsGuard.telAdministracion,
 		y = posY ,x = midW - 35, width = intW - 100,
-		font = fBold, fontSize = 26, align = "left"
+		font = fBold, fontSize = 30, align = "left"
 	})
 	lblPhoneAdmin:setFillColor( unpack(cDarkBlue) )
 	svGuardAssig:insert(lblPhoneAdmin)
 	
-	local iconPhone = display.newImage( "img/btn/llamar.png" )
+	local iconPhone = display.newImage( "img/btn/llamar2.png" )
 	iconPhone:translate( svGuardAssig.contentWidth - 50 , posY )
-	iconPhone:setFillColor( unpack(cDarkBlue) )
+	--iconPhone:setFillColor( unpack(cDarkBlue) )
 	iconPhone.phone = itemsGuard.telAdministracion
 	svGuardAssig:insert( iconPhone )
 	iconPhone:addEventListener( 'tap', callPhone )
@@ -255,7 +261,7 @@ function createGuard(existGuard)
 	
 	local line1 = display.newLine( 0, posY, intW, posY )
 	line1:setStrokeColor( unpack(cGreenWater) )
-	line1.strokeWidth = 2
+	line1.strokeWidth = 1
 	line1.alpha = .6
 	svGuardAssig:insert(line1)
 	
@@ -276,14 +282,14 @@ function createGuard(existGuard)
 	local lblPhoneLobby = display.newText({
 		text = itemsGuard.telLobby,
 		y = posY ,x = midW - 35, width = intW - 100,
-		font = fBold, fontSize = 26, align = "left"
+		font = fBold, fontSize = 30, align = "left"
 	})
 	lblPhoneLobby:setFillColor( unpack(cDarkBlue) )
 	svGuardAssig:insert(lblPhoneLobby)
 	
-	local iconPhone = display.newImage( "img/btn/llamar.png" )
+	local iconPhone = display.newImage( "img/btn/llamar2.png" )
 	iconPhone:translate( svGuardAssig.contentWidth - 50 , posY )
-	iconPhone:setFillColor( unpack(cDarkBlue) )
+	--iconPhone:setFillColor( unpack(cDarkBlue) )
 	iconPhone.phone = itemsGuard.telLobby
 	svGuardAssig:insert( iconPhone )
 	iconPhone:addEventListener( 'tap', callPhone )
@@ -292,7 +298,7 @@ function createGuard(existGuard)
 	
 	local line1 = display.newLine( 0, posY, intW, posY )
 	line1:setStrokeColor( unpack(cGreenWater) )
-	line1.strokeWidth = 2
+	line1.strokeWidth = 1
 	line1.alpha = .6
 	svGuardAssig:insert(line1)
 	

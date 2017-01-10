@@ -29,6 +29,18 @@ local dbManager = {}
 	    end
 	end
 	
+	--limpia la tabla de admin, guardia y condominio
+    dbManager.clearUser = function()
+        openConnection( )
+        query = "UPDATE config SET idApp = 0, email = '', password = '', name = '', apellido = '', condominioId = 0;"
+        db:exec( query )
+		query = "delete from condominios;"
+        db:exec( query )
+		query = "delete from residencial;"
+        db:exec( query )
+		closeConnection( )
+    end
+	
 	-- Verificamos campo en tabla
     local function updateTable(table, field, typeF)
 	    local oldVersion = true

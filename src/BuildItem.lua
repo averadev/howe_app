@@ -183,12 +183,12 @@ function getLoadingLogin(poscY, titleLogin)
 		loadingBottom:setSequence("play")
 		loadingBottom:play()
 
-		local title = display.newText( "Cargando", 0, 30, fontLatoRegular, 24)
+		--[[local title = display.newText( "Cargando", 0, 30, fontLatoRegular, 24)
 		title:setFillColor( 1 )
 		title.x = display.contentWidth / 2
 		title.y = poscY + 60
 		grpLoadingLogin:insert(title)
-		title.text = titleLogin
+		title.text = titleLogin]]
 	else
 		grpLoadingLogin:removeSelf()
 		grpLoadingLogin = nil

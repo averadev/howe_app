@@ -131,12 +131,12 @@ function getBuildMessageItem( event )
 	bg0.screen = "Messages"
 	bg0:addEventListener( 'tap', toScreen )
 	
-	local iconReturn = display.newImage( "img/btn/alert.png" )
+	local iconReturn = display.newImage( "img/btn/return.png" )
 	iconReturn:translate( 65 , lastY + 25 )
 	iconReturn:setFillColor( unpack(cDarkBlue) )
 	svMessage:insert( iconReturn )
-	iconReturn.height = 29
-	iconReturn.width = 30
+	--iconReturn.height = 29
+	--iconReturn.width = 30
 	
 	local labelReturn = display.newText( {
         text = "Regresar a Mensajes",
