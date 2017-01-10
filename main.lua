@@ -21,7 +21,7 @@ if not isUser then
 	})
 else
 	--composer.gotoScene( "src.Visits" )
-	composer.gotoScene( "src.LoginFacebook", {
+	composer.gotoScene( "src.Home", {
 		time = 400,
 		effect = "crossFade",
 		params = { id = 20 }
