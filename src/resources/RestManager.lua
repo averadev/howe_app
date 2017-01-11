@@ -80,14 +80,21 @@ local RestManager = {}
 					local residencial = data.residencial
 					DBManager.insertResidencial(residencial)
 					if #items == 1 then
-						getMessageSignIn(data.message, 1)
+						messageWelcome(data.message)
+						deleteLoadingLogin()
+						DBManager.updateUser(items[1].id, items[1].email, items[1].contrasena, items[1].nombre, items[1].apellido, items[1].condominioId)
+						DBManager.insertCondominium(items)
+						timeMarker = timer.performWithDelay( 2000, function()
+							goToHome()
+						end, 1 )
+						--[[getMessageSignIn(data.message, 1)
 						DBManager.updateUser(items[1].id, items[1].email, items[1].contrasena, items[1].nombre, items[1].apellido, items[1].condominioId)
 						DBManager.insertCondominium(items)
 						timeMarker = timer.performWithDelay( 2000, function()
 							deleteLoadingLogin()
 							deleteMessageSignIn()
 							goToHome()
-						end, 1 )
+						end, 1 )]]
 					else
 						getMessageSignIn(data.message, 1)
 						DBManager.updateUser(items[1].id, items[1].email, items[1].contrasena, items[1].nombre, items[1].apellido, 0)
@@ -99,8 +106,6 @@ local RestManager = {}
 						end, 1 )
 						
 					end
-					
-					
                 else
 					getMessageSignIn(data.message, 2)
 					timeMarker = timer.performWithDelay( 2000, function()
@@ -386,7 +391,7 @@ local RestManager = {}
         url = url.."api/getMessageToVisit/format/json"
         url = url.."/idApp/"..dbConfig.idApp
         url = url.."/condominioId/"..dbConfig.condominioId
-        url = url.."/condominioId/"..dbConfig.condominioId
+		
         local function callback(event)
             if ( event.isError ) then
             else
@@ -465,8 +470,6 @@ local RestManager = {}
 		reloadConfig()
         -- Set url
         local url = dbConfig.url
-        -- Set url
-        local url = dbConfig.url
         url = url.."api/getMessageToVisitById/format/json"
         url = url.."/idApp/"..dbConfig.idApp
         url = url.."/idMSG/".. id
@@ -490,6 +493,79 @@ local RestManager = {}
         end
         -- Do request
         network.request( url, "GET", callback )
+		
+	end
+	
+	--------------------------------- Report ----------------------------------
+	
+	--envia el mensaje de sugerencia
+	RestManager.sendSuggestion = function( subject, message )
+		reloadConfig()
+        -- Set url
+        local url = dbConfig.url
+        url = url.."api/saveSuggestion/format/json"
+        url = url.."/idApp/"..dbConfig.idApp
+        url = url.."/subject/".. urlencode(subject)
+		url = url.."/message/".. urlencode(message)
+	
+        local function callback(event)
+            if ( event.isError ) then
+				resultMessage("Error al enviar el mensaje")
+            else
+                local data = json.decode(event.response)
+				if data then
+					if data.success then
+						resultMessage(data.message)
+						cleanTextFieldReport()
+					else
+						resultMessage("Error al enviar el mensaje")
+					end
+				else
+					resultMessage("Error al enviar el mensaje")
+					
+				end
+            end
+            return true
+        end
+        -- Do request
+        network.request( url, "GET", callback )
+		
+	end
+	
+		--------------------------------- Phones ----------------------------------
+	
+	--envia el mensaje de sugerencia
+	RestManager.getEmergencyCalls = function(  )
+		reloadConfig()
+        -- Set url
+        local url = dbConfig.url
+        url = url.."api/getEmergencyCalls/format/json"
+        url = url.."/idApp/"..dbConfig.idApp
+		url = url.."/condominioId/"..dbConfig.condominioId
+		 
+		print(url)
+		 
+        local function callback(event)
+            if ( event.isError ) then
+				--resultMessage("Error al enviar el mensaje")
+            else
+                local data = json.decode(event.response)
+				if data then
+					if data.success then
+						getPhones(data.items)
+						--cleanTextFieldReport()
+					else
+						--resultMessage("Error al enviar el mensaje")
+					end
+				else
+					--resultMessage("Error al enviar el mensaje")
+					
+				end
+            end
+            return true
+        end
+        -- Do request
+		network.request( url, "GET", callback )
 		
 	end
 	

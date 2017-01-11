@@ -17,7 +17,7 @@ local RestManager = require('src.resources.RestManager')
 --local fxTap = audio.loadSound( "fx/click.wav")
 
 -- Grupos y Contenedores
-local screen, grpLogIn, grpTextFieldL
+local screen, grpLogIn, grpTextFieldL, grpW
 local scene = composer.newScene()
 local tools = Tools:new()
 
@@ -30,6 +30,12 @@ local btnLogin
 ---------------------------------------------------------------------------------
 -- FUNCIONES
 ---------------------------------------------------------------------------------
+
+function messageWelcome()
+	transition.to( grpLogIn, { time= 500, x = -intW, transition = easing.outExpo  } )
+	transition.to( grpTextFieldL, { time= 500, x = -intW, transition = easing.outExpo  } )
+	transition.to( grpW, { time= 500, x = 0, transition = easing.outExpo  } )
+end
 
 function closeKeyboard()
 	native.setKeyboardFocus( nil )
@@ -69,9 +75,8 @@ function gotoLogin( event )
 		if trimString( txtEmail.text ) ~= '' and trimString( txtPass.text ) ~= '' then
 			getLoadingLogin(600, "comprobando usuarios")
 			RestManager.validateUser( trimString( txtEmail.text ), trimString( txtPass.text ) )
-			
 		else
-			getMessageSignIn("Campos vacios", 2)
+			getMessageSignIn("Campos vaciós", 2)
 			timeMarker = timer.performWithDelay( 2000, function()
 				deleteLoadingLogin()
 				deleteMessageSignIn()
@@ -125,6 +130,12 @@ function scene:create( event )
 	-- LogIn
     grpTextFieldL = display.newGroup()
     screen:insert(grpTextFieldL)
+	
+	-- grp welcome
+    grpW = display.newGroup()
+    screen:insert(grpW)
+	grpW.x = intW
+	
 	
 	local posY = 110 + h
 	
@@ -208,7 +219,6 @@ function scene:create( event )
 	
 	posY = posY + 100
 	
-	
 	--btn login facebook
 	local btnRegister = display.newRect( midW, posY, intW - 96, 64 )
     btnRegister:setFillColor( unpack(cGrayL) )   
@@ -228,6 +238,21 @@ function scene:create( event )
 	})
 	lblRegister:setFillColor( unpack(cDarkBlue) )
 	grpLogIn:insert(lblRegister)
+	
+	posY =  intH/2 - 120
+	
+	-- mensaje welcome
+	local lblWelcome = display.newText({
+		text = "BIENVENIDO",
+		y = posY,x = midW,
+		font = fRegular, fontSize = 32, align = "center"
+	})
+	lblWelcome:setFillColor( unpack(cDarkBlue) )
+	grpW:insert(lblWelcome)
+	
+	local iconWelcome = display.newImage("img/bgk/icono_logo2.png")
+	iconWelcome:translate( midW , posY + 120 )
+	grpW:insert( iconWelcome )
 	
 end	
 -- Called immediately after scene has moved onscreen:

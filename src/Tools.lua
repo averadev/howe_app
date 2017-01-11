@@ -107,7 +107,7 @@ function Tools:new()
 		local scvToolbar = widget.newScrollView({
 			top = 70 + lastY,
 			left = 0,
-			width = 80,
+			width = 85,
 			height = intH - 68 - h,
 			scrollWidth = 600,
 			scrollHeight = 800,
@@ -124,15 +124,9 @@ function Tools:new()
 		bg0:setFillColor( unpack(cDarkBlue) )
 		scvToolbar:insert(bg0)
 		
-		local lineScv = display.newLine( 83, 70 + lastY, 83, intH )
-		lineScv:setStrokeColor( 171/255, 172/255, 176/255 )
-		lineScv.strokeWidth = 6
-		lineScv.alpha = .6
-		self:insert(lineScv)
-		
 		local lastY = 0
 		
-		local optionTool = { "GuardAssigned", "Messages", "Visits", "Report", "Invitation", "Pass", "Logout" }
+		local optionTool = { "GuardAssigned", "Messages", "Visits", "Report", "Invitation", "Phones", "Logout" }
 		local iconTool = { "guardia.png", "message.png", "vistas.png", "reportes.png", "invitaciones.png", "llamar.png", "logout.png" }
 		local optionLabel = { "GUARDIA EN TURNO", "MENSAJES", "VISITAS", "REPORTES", "", "NUMERO DE EMERGENCIA", "CERRAR SESIÓN" }
 		local optionSubLabel = { "Comunicáte a Caseta", "Enviar mensaje a Administración", "Agenda y Solicita visitas programadas", 
@@ -155,6 +149,7 @@ function Tools:new()
 			local currScene = composer.getSceneName( "current" )
 			if currScene == "src." .. optionTool[i] then
 				bg0.fill = gGreenBlue
+				bg0.width = 85
 			end
 			
 			if optionLabel[i] ~= "" then
@@ -168,6 +163,19 @@ function Tools:new()
 			lastY = lastY + 100
 			
 		end
+		
+		--[[local lineScv = display.newLine( 50, 70 + lastY, 50, intH )
+		lineScv:setStrokeColor( 171/255, 172/255, 176/255 )
+		lineScv.strokeWidth = 6
+		--lineScv.alpha = .6
+		scvToolbar:insert(lineScv)]]
+		
+		local lineScv = display.newLine( 83, 0, 83, lastY + 100 )
+		lineScv:setStrokeColor( 171/255, 172/255, 176/255 )
+		lineScv.strokeWidth = 6
+		--lineScv.alpha = .6
+		scvToolbar:insert(lineScv)
+		lineScv:toBack()
 		
 		scvToolbar:setScrollHeight(lastY)
 	 
@@ -206,7 +214,7 @@ function Tools:new()
 		lineScv.alpha = .6
 		self:insert(lineScv)
 		
-		local optionTool = { "GuardAssigned", "Messages", "Visits", "Report", "Invitation", "Pass", "Logout" }
+		local optionTool = { "GuardAssigned", "Messages", "Visits", "Report", "Invitation", "Phones", "Logout" }
 		local iconTool = { "guardia.png", "message.png", "vistas.png", "reportes.png", "invitaciones.png", "llamar.png", "logout.png" }
 		local optionLabel = { "GUARDIA EN TURNO", "MENSAJES", "VISITAS", "REPORTES", "", "NUMERO DE EMERGENCIA", "CERRAR SESIÓN" }
 		local optionSubLabel = { "Comunicáte a Caseta", "Enviar mensaje a Administración", "Agenda y Solicita visitas programadas", 

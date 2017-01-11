@@ -1,16 +1,12 @@
 
 local widget = require( "widget" )
 local Sprites = require('src.resources.Sprites')
-local Globals = require('src.resources.Globals')
+require('src.resources.Globals')
 
 ---------------------------------------------------------------------------------
 -- new alert()
 ---------------------------------------------------------------------------------
-
---variables para el tamaño del entorno
-local intW = display.contentWidth
-local intH = display.contentHeight
-local h = display.topStatusBarContentHeight
+local screenW = intW - 85
 
 local colorSuccess = {68/255, 157/255, 68/255}
 local colorDanger = {201/255, 48/255, 44/255}
@@ -19,84 +15,71 @@ local colorWarning = {236/255, 151/255, 31/255}
 local messageConfirm
 local grpMessageLogin
 
-function NewAlert( title ,message, typeAL)
-
-	if not messageConfirm then
-    
-		local midW = display.contentWidth / 2
-		local midH = display.contentHeight / 2
-		local intW = display.contentWidth
-		local intH = display.contentHeight
+---------------------------------------
+-- Muestra un mensaje
+-- @param isOpen indica si el mensaje se mostrara
+-- @param title titulo de la alerta
+-- @param message mensaj que se mostrara
+---------------------------------------
+function NewAlert( isOpen, title, message )
+	local posY = 300 + h
+	if isOpen then
+		if messageConfirm then
+			messageConfirm:removeSelf()
+			messageConfirm = nil
+		end
 		messageConfirm = display.newGroup()
-        
+		
 		local bgShade = display.newRect( midW, midH + h, intW, intH )
 		bgShade:setFillColor( 0, 0, 0, .3 )
 		messageConfirm:insert(bgShade)
 		bgShade:addEventListener( 'tap', sinAction)
-        
-		local bg = display.newRoundedRect( midW, 150, 400 + h, 400, 10 )
-		bg.anchorY = 0
-		bg:setFillColor( 6/255, 24/255, 46/255)
-		messageConfirm:insert(bg)
 		
-		local lineRecordVisit = display.newLine( intW/2 - 200, 310 + h, intW/2 + 200, 310 + h )
-		lineRecordVisit:setStrokeColor( 225/255, 0, 4/255 )
-		lineRecordVisit.strokeWidth = 4
-		lineRecordVisit.y = lineRecordVisit.y - bg.contentHeight/4
-		messageConfirm:insert(lineRecordVisit)
+		local bg0 = display.newRect( screenW/2 + 85, posY - 43, screenW - 70, 200 )
+		bg0.anchorY = 0
+		bg0:setFillColor( unpack( cWhite ) )
+		bg0.fill = gGreenBlue
+		messageConfirm:insert(bg0)
 		
-		local labelTitleNewAlert = display.newText( {   
-			x = midW, y = 320 + h,
-			text = title,  font = fontDefault, fontSize = 30, align = "center",
+		local bg1 = display.newRect( screenW/2 + 85, posY - 42, screenW - 72, 198 )
+		bg1.anchorY = 0
+		bg1:setFillColor( unpack( cWhite ) )
+		messageConfirm:insert(bg1)
+		
+		local lblTitle = display.newText( {
+			text = title,
+			x = screenW/2 + 85, y = posY -17,
+			width = screenW - 30,
+			font = fRegular, fontSize = 18, align = "center"
 		})
-		labelTitleNewAlert:setFillColor( 1 )
-		labelTitleNewAlert.y = labelTitleNewAlert.y - bg.contentHeight/2 + 50
-		messageConfirm:insert(labelTitleNewAlert)
-	
-		local labelMessageNewAlert = display.newText( {   
-			x = midW, y = 250 + h,
-			width = 380, height = 300,
-			text = message,  font = fontDefault, fontSize = 24, align = "center",
-		})
-		labelMessageNewAlert:setFillColor( 1 )
-		labelMessageNewAlert.y = labelMessageNewAlert.y + labelMessageNewAlert.contentHeight/2
-		messageConfirm:insert(labelMessageNewAlert)
+		lblTitle:setFillColor( unpack(cDarkBlue) )
+		messageConfirm:insert( lblTitle )
 		
-		if typeAL == 1 then
-			
-			local btnCloseNewAlert = display.newRoundedRect( midW, 480 + h, 200, 60, 10 )
-			btnCloseNewAlert:setFillColor( 51/255, 176/255, 46/255)
-			messageConfirm:insert(btnCloseNewAlert)
-			btnCloseNewAlert:addEventListener( 'tap', deleteNewAlert)
-			
-			local labelMessageNewAlert = display.newText( {   
-				x = midW, y = 467 + h,
-				text = "ACEPTAR",  font = fontDefault, fontSize = 24, align = "center",
-			})
-			labelMessageNewAlert:setFillColor( 1 )
-			labelMessageNewAlert.y = labelMessageNewAlert.y + labelMessageNewAlert.contentHeight/2
-			messageConfirm:insert(labelMessageNewAlert)
-			
-		end
+		posY = posY + 10
+		
+		local line1 = display.newLine( 120, posY, intW - 35, posY )
+		line1:setStrokeColor( unpack(cGreenWater) )
+		line1.strokeWidth = 1
+		line1.alpha = .6
+		messageConfirm:insert(line1)
+		
+		posY = posY + 30
+		
+		local lblMessage = display.newText( {
+			text = message,
+			x = screenW/2 + 85, y = posY -17,
+			width = screenW - 100,
+			font = fRegular, fontSize = 16, align = "left"
+		})
+		lblMessage:setFillColor( unpack(cDarkBlue) )
+		lblMessage.anchorY = 0
+		messageConfirm:insert( lblMessage )
 		
 	else
-	
-		messageConfirm:removeSelf()
-		messageConfirm = nil
-		NewAlert(title, message, typeAL)
-		
-	end
-	
-end
-
-function deleteNewAlert()
-	if messageConfirm then
-		messageConfirm:removeSelf()
-		messageConfirm = nil
-	end
-	local composer = require( "composer" )
-	if composer.getSceneName( "current" ) == "src.Suggestions" then
-		moveGrpTextField(2)
+		if messageConfirm then
+			messageConfirm:removeSelf()
+			messageConfirm = nil
+		end
 	end
 end
 
@@ -214,12 +197,6 @@ function getNoContent(obj, txtData)
 		grpLoading:insert(noData)
 		noData.height = 331
 		noData.width = 250
-		
-		--[[local title = display.newText( txtData, 0, 30, "Chivo", 16)
-		title:setFillColor( 0 )
-		title.x = obj.contentWidth / 2
-		title.y = (obj.height / 2) 
-		grpLoading:insert(title) ]]
 	else
 		grpLoading:removeSelf()
 		grpLoading = nil

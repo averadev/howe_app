@@ -15,7 +15,7 @@ local isUser = DBManager.setupSquema()
 
 if not isUser then
 	--composer.gotoScene( "src.LoginFacebook" )
-	composer.gotoScene( "src.LoginFacebook", {
+	composer.gotoScene( "src.UserType", {
 		time = 400,
 		effect = "crossFade"
 	})
