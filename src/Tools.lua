@@ -39,7 +39,7 @@ function Tools:new()
 		self:insert(lblLogo)
 		
 		local currScene = composer.getSceneName( "current" )
-		if ( currScene == "src.SignIn" or currScene == "src.Login"  ) then
+		if ( currScene == "src.UserType" or currScene == "src.Login"  ) then
 			local iconBack = display.newImage("img/btn/regresar.png")
 			iconBack:translate( 40 , 35 + h )
 			if ( currScene == "src.Login"  ) then

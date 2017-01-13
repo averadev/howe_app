@@ -67,7 +67,7 @@ local RestManager = {}
         url = url.."/idApp/"..settings.idApp
         url = url.."/email/"..urlencode(email)
         url = url.."/password/"..password
-		--url = url.."/playerId/"..urlencode(Globals.playerIdToken)
+		url = url.."/playerId/"..urlencode(playerIdToken)
 	
         local function callback(event)
             if ( event.isError ) then
@@ -607,5 +607,63 @@ local RestManager = {}
         network.request( url, "GET", callback ) 
 	
 	end
+	
+	------------------------------------------------------------------
+	---------------------------------
+	-- ADMIN/GUARD APP
+	---------------------------------
+	------------------------------------------------------------------
+	
+	RestManager.validateAdmin = function(email, password, city)
+	
+        local settings = DBManager.getSettings()
+        -- Set url
+        password = crypto.digest(crypto.md5, password)
+        local url = settings.url
+        url = url.."api/validateAdmin/format/json"
+        url = url.."/idApp/"..settings.idApp
+        url = url.."/email/"..urlencode(email)
+        url = url.."/password/"..password
+        url = url.."/playerId/".. urlencode(playerIdToken)
+		
+		
+        local function callback(event)
+            if ( event.isError ) then
+            else
+                local data = json.decode(event.response)
+                if data.success then
+					messageWelcome(data.message)
+					deleteLoadingLogin()
+					DBManager.updateAdmin(data.items[1].id, data.items[1].email, data.items[1].contrasena, data.items[1].nombre, data.items[1].ciudadesId, data.items[1].residencialId)
+					DBManager.insertGuard(data.items2)
+					DBManager.insertCondominiumAdmin(data.items3)
+					DBManager.insertResidentialAdmin(data.items4)
+					DBManager.insertAsuntos(data.asuntos)
+					setItemsGuard(data.items2)
+					--[[timeMarker = timer.performWithDelay( 2000, function()
+						goToGuard()
+					end, 1 )]]
+					--[[NewAlert("Plantec Security","Usuario correcto", 0)
+					DBManager.updateUser(data.items[1].id, data.items[1].email, data.items[1].contrasena, data.items[1].nombre, data.items[1].ciudadesId, data.items[1].residencialId)
+					DBManager.insertGuard(data.items2)
+					DBManager.insertCondominium(data.items3)
+					DBManager.insertResidential(data.items4)
+                    DBManager.insertAsuntos(data.asuntos)
+					setItemsGuard(data.items2)]]
+                    --admin@booking.com
+                else
+                    --native.showAlert( "Plantec Security", data.message, { "OK"})
+					NewAlert("Howe Security","Usuario Incorrecto", 0)
+					timeMarker = timer.performWithDelay( 2000, function()
+						deleteNewAlert()
+					end, 1 )
+                end
+            end
+            return true
+        end
+        -- Do request
+        network.request( url, "GET", callback ) 
+    end
+	
 	
 return RestManager

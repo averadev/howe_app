@@ -14,6 +14,8 @@ require('src.resources.Globals')
 local composer = require( "composer" )
 local DBManager = require('src.resources.DBManager')
 local RestManager = require('src.resources.RestManager')
+local settings = DBManager.getSettings()
+
 --local fxTap = audio.loadSound( "fx/click.wav")
 
 -- Grupos y Contenedores
@@ -26,10 +28,18 @@ local newH = 0
 local h = display.topStatusBarContentHeight
 local txtEmail, txtPass
 local btnLogin
+local itemsGuard
 
 ---------------------------------------------------------------------------------
 -- FUNCIONES
 ---------------------------------------------------------------------------------
+
+function setItemsGuard(items)
+	itemsGuard = items
+	if #itemsGuard > 0 then
+		LoadImageGuard(1)
+	end
+end
 
 function messageWelcome()
 	transition.to( grpLogIn, { time= 500, x = -intW, transition = easing.outExpo  } )
@@ -42,11 +52,11 @@ function closeKeyboard()
 	return true
 end
 
-function goToHome()
+function goToGuard()
 	btnLogin:addEventListener( 'tap', gotoLogin)
 	btnLogin.alpha = 1
-	composer.removeScene("src.Welcome")
-	composer.gotoScene("src.Welcome")
+	composer.removeScene("src.LoginGuard")
+	composer.gotoScene("src.LoginGuard")
 end
 
 function errorLogin()
@@ -74,7 +84,7 @@ function gotoLogin( event )
 		
 		if trimString( txtEmail.text ) ~= '' and trimString( txtPass.text ) ~= '' then
 			getLoadingLogin(600, "comprobando usuarios")
-			RestManager.validateUser( trimString( txtEmail.text ), trimString( txtPass.text ) )
+			RestManager.validateAdmin( trimString( txtEmail.text ), trimString( txtPass.text ) )
 		else
 			getMessageSignIn("Campos vaciós", 2)
 			timeMarker = timer.performWithDelay( 2000, function()
@@ -87,7 +97,6 @@ function gotoLogin( event )
 	
 	return true
 end
-
 
 function onTxtFocus( event )
     if ( event.phase == "began" ) then
@@ -103,6 +112,41 @@ function onTxtFocus( event )
     elseif ( event.phase == "editing" ) then
         
     end
+end
+
+--carga las imagenes de los guardias
+function LoadImageGuard(posc)
+	-- Determinamos si la imagen existe
+	local path = system.pathForFile( itemsGuard[posc].foto, system.TemporaryDirectory )
+	local fhd = io.open( path )
+	if fhd then
+		fhd:close()
+			if posc < #itemsGuard then
+				posc = posc + 1
+				LoadImageGuard(posc)
+			else
+				goToGuard()
+			end
+	else
+		-- Listener de la carga de la imagen del servidor
+		local function loadImageListener( event )
+			if ( event.isError ) then
+				native.showAlert( "Plantec Security", "Network error :(", { "OK"})
+			else
+				event.target.alpha = 0
+					if posc < #itemsGuard then
+						posc = posc + 1
+						LoadImageGuard(posc)
+					else
+						goToGuard()
+					end
+				--end
+			end
+		end
+		-- Descargamos de la nube
+		display.loadRemoteImage( settings.url..itemsGuard[posc].path..itemsGuard[posc].foto, 
+		"GET", loadImageListener, itemsGuard[posc].foto, system.TemporaryDirectory )
+	end
 end
 
 ---------------------------------------------------------------------------------
@@ -135,7 +179,6 @@ function scene:create( event )
     grpW = display.newGroup()
     screen:insert(grpW)
 	grpW.x = intW
-	
 	
 	local posY = 110 + h
 	
@@ -216,28 +259,6 @@ function scene:create( event )
 	})
 	lblLogin:setFillColor( unpack(cWhite) )
 	grpLogIn:insert(lblLogin)
-	
-	posY = posY + 100
-	
-	--btn login facebook
-	local btnRegister = display.newRect( midW, posY, intW - 96, 64 )
-    btnRegister:setFillColor( unpack(cGrayL) )   
-	btnRegister.fill = gGreenBlue
-	btnRegister.screen = "SignIn"
-    grpLogIn:insert(btnRegister)
-	btnRegister:addEventListener( 'tap', gotoScreen )
-	
-	local btnRegister0 = display.newRect( midW, posY, intW - 100, 60 )
-    btnRegister0:setFillColor( unpack(cWhite) )
-    grpLogIn:insert(btnRegister0)
-	
-	local lblRegister = display.newText({
-		text = "REGISTRARSE",
-		y = posY,x = midW,
-		font = fRegular, fontSize = 25, align = "center"
-	})
-	lblRegister:setFillColor( unpack(cDarkBlue) )
-	grpLogIn:insert(lblRegister)
 	
 	posY =  intH/2 - 120
 	

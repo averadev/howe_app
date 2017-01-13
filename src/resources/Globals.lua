@@ -12,6 +12,11 @@ midH = display.contentCenterY
 hm3 = intH / 3
 h = display.topStatusBarContentHeight
 
+numCondominium = 0
+	
+-- token de usuario
+playerIdToken = 0
+
 -- Colors
 cBlack = { 0 }
 cGrayL = { .93 }

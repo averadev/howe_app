@@ -94,7 +94,7 @@ function scene:create( event )
 	local btnVisit = display.newRect( midW, posY, intW - 100, 60 )
     btnVisit:setFillColor( unpack(cWhite) )
     grpUserType:insert(btnVisit)
-	btnVisit.screen = "Login"
+	btnVisit.screen = "admin.Login"
 	btnVisit:addEventListener( 'tap', gotoScreen )
 	
 	local lblVisit = display.newText({
