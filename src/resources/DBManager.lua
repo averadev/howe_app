@@ -157,6 +157,45 @@ local dbManager = {}
         end
 		closeConnection( )
 	end
+	
+	--activa un guardia
+	dbManager.updateGuardActive = function()
+		openConnection( )
+		local query = "UPDATE empleados SET active = 0;"
+        db:exec( query )
+		closeConnection( )
+	end
+	
+	--obtiene los datos de los guardias
+	dbManager.getGuards = function()
+		local result = {}
+		openConnection( )
+		for row in db:nrows("SELECT * FROM empleados;") do
+			result[#result + 1] = row
+		end
+		closeConnection( )
+		if #result > 0 then
+			return result
+		else
+			return 1
+		end
+	end
+	
+	--valida el acceso de un guardia
+	dbManager.validateGuard = function(password, idG)
+		local crypto = require("crypto")
+		local pass = crypto.digest(crypto.md5, password)
+		local result = {}
+		openConnection( )
+		for row in db:nrows("SELECT * FROM empleados where id = '" .. idG .. "' and contrasena = '" .. pass .."';") do
+			local query = "UPDATE empleados SET active = 1 where id = " .. row.id ..";"
+			db:exec( query )
+			closeConnection( )
+			return  row
+		end
+		closeConnection( )
+		return 1
+	end
 
 	-- Setup squema if it doesn't exist
 	dbManager.setupSquema = function()

@@ -55,8 +55,8 @@ end
 function goToGuard()
 	btnLogin:addEventListener( 'tap', gotoLogin)
 	btnLogin.alpha = 1
-	composer.removeScene("src.LoginGuard")
-	composer.gotoScene("src.LoginGuard")
+	composer.removeScene("src.admin.LoginGuard")
+	composer.gotoScene("src.admin.LoginGuard")
 end
 
 function errorLogin()

@@ -614,14 +614,62 @@ local RestManager = {}
 	---------------------------------
 	------------------------------------------------------------------
 	
+	--------------------------------- panel ----------------------------------
+	
+	RestManager.getNotif = function()
+	
+        reloadConfig()
+        -- Set url
+        local url = dbConfig.url
+        url = url.."api/getNotif/format/json"
+		url = url.."/residencial/"..dbConfig.residencial
+		print(url)
+        local function callback(event)
+            if ( event.isError ) then
+            else
+                local data = json.decode(event.response)
+                if data.success then
+					drawNotif(data.items)
+                end
+            end
+            return true
+        end
+        -- Do request
+       network.request( url, "GET", callback ) 
+    end
+	
+	--marca el mesaje como leidos
+	RestManager.updateVisitAction = function(idMSG, action)
+		
+		reloadConfig()
+        -- Set url
+        local url = dbConfig.url
+        url = url.."api/updateVisitAction/format/json"
+        url = url.."/idMSG/".. idMSG
+        url = url.."/action/".. action
+		url = url.."/residencial/"..dbConfig.residencial
+		print(url)
+        local function callback(event)
+            RestManager.getNotif()
+            return true
+        end
+        -- Do request
+        network.request( url, "GET", callback )
+		
+	end
+	
+	--------------------------------- login ----------------------------------
+	
 	RestManager.validateAdmin = function(email, password, city)
 	
-        local settings = DBManager.getSettings()
+        reloadConfig()
+        -- Set url
+        local url = dbConfig.url
         -- Set url
         password = crypto.digest(crypto.md5, password)
-        local url = settings.url
+        local url = dbConfig.url
         url = url.."api/validateAdmin/format/json"
-        url = url.."/idApp/"..settings.idApp
+        url = url.."/idApp/"..dbConfig.idApp
         url = url.."/email/"..urlencode(email)
         url = url.."/password/"..password
         url = url.."/playerId/".. urlencode(playerIdToken)
@@ -652,10 +700,48 @@ local RestManager = {}
 					setItemsGuard(data.items2)]]
                     --admin@booking.com
                 else
-                    --native.showAlert( "Plantec Security", data.message, { "OK"})
-					NewAlert("Howe Security","Usuario Incorrecto", 0)
+					getMessageSignIn(data.message, 2)
 					timeMarker = timer.performWithDelay( 2000, function()
-						deleteNewAlert()
+						deleteLoadingLogin()
+						deleteMessageSignIn()
+						errorLogin()
+					end, 1 )
+                    --native.showAlert( "Plantec Security", data.message, { "OK"})
+					--[[NewAlert("Howe Security","Usuario Incorrecto", 0)
+					timeMarker = timer.performWithDelay( 2000, function()
+						NewAlert("Howe Security","Usuario Incorrecto", 0)
+					end, 1 )]]
+                end
+            end
+            return true
+        end
+        -- Do request
+        network.request( url, "GET", callback ) 
+    end
+	
+	RestManager.signOut = function(password)
+	
+        reloadConfig()
+        -- Set url
+        local url = dbConfig.url
+        local url = dbConfig.url
+        url = url.."api/signOut/format/json"
+        url = url.."/idApp/"..dbConfig.idApp
+        url = url.."/password/"..password
+	
+        local function callback(event)
+            if ( event.isError ) then
+            else
+                local data = json.decode(event.response)
+                if data.success then
+					print("entro")
+					--DBManager.clearUser()
+					--signOut()
+                else
+                    --native.showAlert( "Plantec Security", data.message, { "OK"})
+					NewAlert(true, "Plantec Security", data.message)
+					timeMarker = timer.performWithDelay( 2000, function()
+						NewAlert(false, "Plantec Security", data.message)
 					end, 1 )
                 end
             end
