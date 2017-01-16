@@ -31,17 +31,26 @@ local first = 0
 -- FUNCIONES
 ---------------------------------------------------------------------------------
 
+---------------------------------------------------
+-- @todo Carga los elementos 
+---------------------------------------------------
 function getPhones( items )
 	if #items > 0 then
 		CreatePhonesItem( items[1] )
 	end
 end
 
+---------------------------------------------------
+-- @todo Marca al telefono seleccionado
+---------------------------------------------------
 function callPhone( event )
 	system.openURL( "tel:" .. event.target.phone )
 	return true
 end
 
+---------------------------------------------------
+-- @todo Crea los items de los telefonos
+---------------------------------------------------
 function CreatePhonesItem( item )
 	
 	local screenW = intW - 85
@@ -115,61 +124,6 @@ function CreatePhonesItem( item )
 		
 		
 	end
-	
-	--[[local lblPhoneAdmin0 = display.newText({
-		text = "Teléfono Administracion",
-		y = posY ,x = midW - 35, width = intW - 100,
-		font = fRegular, fontSize = 18, align = "left"
-	})
-	lblPhoneAdmin0:setFillColor( unpack(cDarkBlue) )
-	grpPhones:insert(lblPhoneAdmin0)]]
-	
-	--[[posY = posY + 35
-	local lblPhoneAdmin = display.newText({
-		text = itemsGuard.telAdministracion,
-		y = posY ,x = midW - 35, width = intW - 100,
-		font = fBold, fontSize = 30, align = "left"
-	})
-	lblPhoneAdmin:setFillColor( unpack(cDarkBlue) )
-	svGuardAssig:insert(lblPhoneAdmin)
-	
-	local iconPhone = display.newImage( "img/btn/llamar2.png" )
-	iconPhone:translate( svGuardAssig.contentWidth - 50 , posY )
-	--iconPhone:setFillColor( unpack(cDarkBlue) )
-	iconPhone.phone = itemsGuard.telAdministracion
-	svGuardAssig:insert( iconPhone )
-	iconPhone:addEventListener( 'tap', callPhone )
-	
-	posY = posY + 35
-	local lblAttentionSchedule = display.newText({
-		text = "Horarios de Atención:",
-		y = posY ,x = midW - 35, width = intW - 100,
-		font = fLight, fontSize = 16, align = "left"
-	})
-	lblAttentionSchedule:setFillColor( unpack(cDarkBlue) )
-	svGuardAssig:insert(lblAttentionSchedule)
-	lblAttentionSchedule.alpha = .85
-	
-	posY = posY + 10
-	local lblAttentionSchedule0 = display.newText({
-		text = "Lunes a viernes de 09:00 a 17:00 \nSabados de 9:00 a 14:00 \n Domingos N/A",
-		y = posY ,x = midW - 35, width = intW - 100,
-		font = fLight, fontSize = 16, align = "left"
-	})
-	lblAttentionSchedule0:setFillColor( unpack(cDarkBlue) )
-	svGuardAssig:insert(lblAttentionSchedule0)
-	lblAttentionSchedule0.anchorY = 0
-	lblAttentionSchedule0.alpha = .85
-	
-	posY = posY + 80
-	
-	local line1 = display.newLine( 0, posY, intW, posY )
-	line1:setStrokeColor( unpack(cGreenWater) )
-	line1.strokeWidth = 1
-	line1.alpha = .6
-	svGuardAssig:insert(line1)]]
-	
-	
 	
 end
 

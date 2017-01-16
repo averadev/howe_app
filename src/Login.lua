@@ -31,17 +31,26 @@ local btnLogin
 -- FUNCIONES
 ---------------------------------------------------------------------------------
 
+---------------------------------------------------
+-- @todo Muestra un mensaje de bienvenido
+---------------------------------------------------
 function messageWelcome()
 	transition.to( grpLogIn, { time= 500, x = -intW, transition = easing.outExpo  } )
 	transition.to( grpTextFieldL, { time= 500, x = -intW, transition = easing.outExpo  } )
 	transition.to( grpW, { time= 500, x = 0, transition = easing.outExpo  } )
 end
 
+---------------------------------------------------
+-- @todo Esconde el teclado
+---------------------------------------------------
 function closeKeyboard()
 	native.setKeyboardFocus( nil )
 	return true
 end
 
+------------------------------------------------------------------
+-- @todo Manda a la pantalla de tipo de usuario de residencia
+------------------------------------------------------------------
 function goToHome()
 	btnLogin:addEventListener( 'tap', gotoLogin)
 	btnLogin.alpha = 1
@@ -49,11 +58,17 @@ function goToHome()
 	composer.gotoScene("src.Welcome")
 end
 
+---------------------------------------------------
+-- @todo Muestra un mensaje de error
+---------------------------------------------------
 function errorLogin()
 	btnLogin:addEventListener( 'tap', gotoLogin)
 	btnLogin.alpha = 1
 end
 
+---------------------------------------------------
+-- @todo Manda a la pantalla seleccionada
+---------------------------------------------------
 function gotoScreen( event )
 	local t = event.target
 	t.alpha = .75
@@ -66,6 +81,9 @@ function gotoScreen( event )
 	return true
 end
 
+---------------------------------------------------
+-- @todo Comprueba el usuario
+---------------------------------------------------
 function gotoLogin( event )
 	btnLogin:removeEventListener( 'tap', gotoLogin )
 	btnLogin.alpha = .75
@@ -88,7 +106,9 @@ function gotoLogin( event )
 	return true
 end
 
-
+---------------------------------------------------
+-- @todo Evento focus de los textField
+---------------------------------------------------
 function onTxtFocus( event )
     if ( event.phase == "began" ) then
         -- User begins editing "defaultField"

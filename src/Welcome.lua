@@ -27,7 +27,9 @@ local newH = 0
 -- FUNCIONES
 ---------------------------------------------------------------------------------
 
-
+-----------------------------------------------
+-- MAnda a la pantalla principal de usuarios
+-----------------------------------------------
 function gotoScreen( event )
 	
 	local t = event.target
@@ -43,7 +45,9 @@ function gotoScreen( event )
 	return true
 end
 
-
+-----------------------------------------------
+-- Evento focus de los textField
+-----------------------------------------------
 function onTxtFocus( event )
 
     if ( event.phase == "began" ) then

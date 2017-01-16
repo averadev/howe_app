@@ -49,6 +49,9 @@ local grpTracing = {}
 -- FUNCIONES
 ---------------------------------------------------------------------------------
 
+--------------------------------------
+-- CArga los datos de las visitas
+--------------------------------------
 function setItemsVisits( items )
 	if #items > 0 then
 		itemsVisit = items
@@ -61,13 +64,16 @@ function setItemsVisits( items )
 	tools:setLoading( false, grpLoading )
 end
 
+-----------------------------------------------
+-- CAmbia el estado de acesso de la visita
+-----------------------------------------------
 function getAccess()
-	
 	RestManager.updateVisitAction(idMSG, 2)
-	
 end
 
+-----------------------------------------------------
 --muestra y/o oculta el boton de eliminar visitas
+-----------------------------------------------------
 function showBtnDeleteVisit(isTrue, isActive, idVisit, posc)
 	
 	if isTrue then
@@ -116,6 +122,9 @@ function refreshMessageVisit()
 	tools:setLoading( false, grpLoading )
 end
 
+-----------------------------------------------
+--¿ MArca ka visita como leido
+-----------------------------------------------
 function markRead( event )
 
 	event.target:removeEventListener('tap', markRead)
@@ -129,7 +138,9 @@ function markRead( event )
 	RestManager.getMessageUnRead()
 end
 
-
+-----------------------------------------------
+-- Muestra el checkbox
+-----------------------------------------------
 function showCheckBoxV( event )
 	grpDelete.alpha = 1
 	grpBtnDelete.alpha = 1
@@ -137,6 +148,9 @@ function showCheckBoxV( event )
 	return true
 end
 
+-----------------------------------------------
+-- Esconde el checkbox
+-----------------------------------------------
 function hideCheckBoxV( event )
 	grpDelete.alpha = 0
 	grpBtnDelete.alpha = 0
@@ -144,6 +158,9 @@ function hideCheckBoxV( event )
 	return true
 end
 
+-----------------------------------------------
+-- Cambia los estados de los checkbox
+-----------------------------------------------
 function changeCheckBoxV( event )
 
 	local t = event.target
@@ -166,14 +183,19 @@ function changeCheckBoxV( event )
 	end
 	
 	return true
-	
 end
 
+------------------------------------------------
+-- CAmbia el estado de acesso de la visita
+-----------------------------------------------
 function VisitTracking( event )
 	local t = event.target
 	RestManager.updateVisitAction( t.id, t.action, t.posc )
 end
 
+-----------------------------------------------
+-- CAmbia el boton de la visita
+-----------------------------------------------
 function ChangeVisitTracking(i, action)
 	
 	grpTracing[i]:removeSelf()
@@ -223,6 +245,12 @@ function ChangeVisitTracking(i, action)
 	
 end
 
+-----------------------------------------------
+-- Crea los items de visitas por interaccion
+-- @params i numero de la interaccion
+-- @params srvW anchura del scroll
+-- @params posY posicion en y de los elementos
+-----------------------------------------------
 function createVisits( i, srvW, posY )
 	
 	local item = itemsVisit[i]
@@ -446,6 +474,9 @@ function createVisits( i, srvW, posY )
 	
 end
 
+-----------------------------------------------
+-- Crea la carcasa de las visitas
+-----------------------------------------------
 function buildVisitItems()
 	
 	posY = 40
@@ -530,72 +561,9 @@ function buildVisitItems()
 		
 		createVisits( y, srvW, posY )
 		
-		--[[local visit = Visit:new()
-		grpSvVisits:insert(visit)
-		visit:build( itemsVisit[y], srvW )
-		visit.y = posY
-		visit.id = itemsVisit[y].id
-		visit.posci = y]]
-		
-		--[[noLeido[y] = display.newCircle( 315, posY + 30, 12 )
-		noLeido[y]:setFillColor( 0.5 )
-		noLeido[y].fill = gGreenBlue
-		grpSvVisits:insert(noLeido[y])
-		
-		if itemsVisit[y].leido == "0" then
-			visit:addEventListener( 'tap', markRead )
-		else
-			noLeido[y].alpha = 0
-		end]]
-		
 		posY = posY + 220
 	
 	end
-	
-	--[[local bgDeleteVisits = display.newRect( srvW/2, posY, srvW - 30, 60 )
-    bgDeleteVisits:setFillColor( unpack(cWhite) )   
-	bgDeleteVisits.fill = gGreenBlue
-    grpDelete:insert(bgDeleteVisits)
-	
-	btnDeleteVisits = display.newRect( srvW/2, posY, srvW - 34, 56 )
-    btnDeleteVisits:setFillColor( unpack(cWhite) ) 
-    grpDelete:insert(btnDeleteVisits)
-	btnDeleteVisits:addEventListener( 'tap', deleteVisit )
-	
-	local txtBtnDeleteVisits = display.newText( {
-		text = "Borrar visitas",
-		x = srvW/2, y = posY,
-		font = fRegular, fontSize = 24, align = "center"
-	})
-	txtBtnDeleteVisits:setFillColor( unpack(cDarkBlue) )
-	grpDelete:insert(txtBtnDeleteVisits)
-	
-	for y = 1, #itemsVisit, 1 do
-	
-		idDeleteV[y] = 0
-        itemsVisit[y].posc = y
-		
-		local visit = Visit:new()
-		grpSvVisits:insert(visit)
-		visit:build( itemsVisit[y], srvW )
-		visit.y = posY
-		visit.id = itemsVisit[y].id
-		visit.posci = y
-		
-		noLeido[y] = display.newCircle( 315, posY + 30, 12 )
-		noLeido[y]:setFillColor( 0.5 )
-		noLeido[y].fill = gGreenBlue
-		grpSvVisits:insert(noLeido[y])
-		
-		if itemsVisit[y].leido == "0" then
-			visit:addEventListener( 'tap', markRead )
-		else
-			noLeido[y].alpha = 0
-		end
-		
-		posY = posY + 99
-	
-	end]]
 	
 	svVisits:setScrollHeight(posY)
 	

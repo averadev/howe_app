@@ -31,6 +31,9 @@ local first = 0
 -- FUNCIONES
 ---------------------------------------------------------------------------------
 
+---------------------------------------------------
+-- @todo Cierra la sesión actual
+---------------------------------------------------
 function SignOut( event )
 
 	tools:setLoading( true, grpLoading )
@@ -39,6 +42,9 @@ function SignOut( event )
 	return true
 end
 
+---------------------------------------------------
+-- @todo Manda a la pantalla de login
+---------------------------------------------------
 function SignOut2( )
 	DBManager.clearUser()
 	composer.removeScene("src.LoginFacebook")

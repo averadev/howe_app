@@ -28,6 +28,9 @@ local txtEmail, txtPass
 -- FUNCIONES
 ---------------------------------------------------------------------------------
 
+---------------------------------------------------------------
+-- @todo Manda a las pantallas de login normal o registro
+---------------------------------------------------------------
 function gotoScreen( event )
 	
 	local t = event.target
@@ -37,14 +40,15 @@ function gotoScreen( event )
 	timer.performWithDelay( 100, function() 
 		t.alpha = 1  
 		composer.removeScene( "src."..t.screen )
-		--composer.gotoScene("src."..t.screen )
         composer.gotoScene("src."..t.screen, { time = 400, effect = "fromRight" } )
 	end )
 	
 	return true
 end
 
-
+---------------------------------------------------
+-- @todo Evento focus de los textField
+---------------------------------------------------
 function onTxtFocus( event )
 
     if ( event.phase == "began" ) then
@@ -102,27 +106,7 @@ function scene:create( event )
 	
 	posY = posY + 150
 	
-	print(intW - 100)
-	
 	--btn login facebook
-	--[[local btnLoginFace = display.newRect( midW, posY, intW - 96, 64 )
-    btnLoginFace:setFillColor( unpack(cGrayL) )   
-	btnLoginFace.fill = gGreenBlue
-    grpLoginFace:insert(btnLoginFace)
-	
-	local btnLoginFace1 = display.newRect( midW, posY, intW - 100, 60 )
-    btnLoginFace1:setFillColor( unpack(cWhite) )
-    grpLoginFace:insert(btnLoginFace1)
-	
-	local lblLogin = display.newText({
-		text = "FACEBOOK",
-		y = posY,x = midW,
-		font = fBold, fontSize = 25, align = "center"
-	})
-	lblLogin:setFillColor( unpack(cBlack) )
-	lblLogin.fill = gGreenBlue
-	grpLoginFace:insert(lblLogin)]]
-	
 	local btnLoginFace = display.newImage("img/btn/facebook.png")
 	btnLoginFace:translate( midW , posY)
 	grpLoginFace:insert( btnLoginFace )

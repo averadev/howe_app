@@ -34,6 +34,10 @@ local idMSG
 -- FUNCIONES
 ---------------------------------------------------------------------------------
 
+--------------------------------------
+-- Carga los elementos
+-- @params item los datos de la visita
+--------------------------------------
 function setItemsVisit(item)
 	
 	itemVisit = item
@@ -42,6 +46,9 @@ function setItemsVisit(item)
 	
 end
 
+--------------------------------------
+-- Contruye el mensaje de visita
+--------------------------------------
 function getBuildVisitItem( event )
 	
 	lastY = 30
@@ -65,29 +72,6 @@ function getBuildVisitItem( event )
 		bgCancel:addEventListener("tap", getAccess)
         grpNew:insert(bgCancel)
         
-        --[[local lblCancel = display.newText( {
-            text = "Negar Acceso",
-            x = 112, y = 30, width = 220,
-            font = fontLatoBold, fontSize = 20, align = "center"
-        })
-        grpNew:insert( lblCancel )
-        
-        local bgAccept = display.newRect( 226, 2, 223, 60 )
-        bgAccept.anchorX = 0
-        bgAccept.anchorY = 0
-        bgAccept:setFillColor( 0,150/255,43/255 )
-        bgAccept.access = true
-		bgAccept:addEventListener("tap", getAccess)
-        grpNew:insert(bgAccept)
-        
-        local lblAccept = display.newText( {
-            text = "Aceptar Acceso",
-            x = 337, y = 30, width = 220,
-            font = fontLatoBold, fontSize = 20, align = "center"
-        })
-        grpNew:insert( lblAccept )
-        
-        lastY = 90]]
     end
 	
 	local labelDate = display.newText( {

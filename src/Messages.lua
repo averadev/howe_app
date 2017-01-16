@@ -45,6 +45,9 @@ local btnCheckInM = {}
 -- FUNCIONES
 ---------------------------------------------------------------------------------
 
+---------------------------------------------------
+-- @todo Carga los datos de los mensajes
+---------------------------------------------------
 function setItemsNotiAdmin( items )
 	if #items > 0 then
 		itemsAdmin = items
@@ -54,13 +57,18 @@ function setItemsNotiAdmin( items )
 	end
 end
 
+-------------------------------------------------------------------
+-- @todo Muestra un mensaje de error o mensajes no encontrados
+-- @params message texto a mostrar
+-------------------------------------------------------------------
 function noMessages(message)
 	getNoContent( svMessage, message )
 end
 
---elimina las visitas selecionadas
+---------------------------------------------------
+-- @todo Elimina las visitas selecionadas
+---------------------------------------------------
 function deleteMessage( event )
-	--table.remove(idDeleteA,2)
 	local adminDelete = {}
 	for i= 1, #idDeleteA, 1 do
 		if idDeleteA[i] ~= 0 then
@@ -73,6 +81,9 @@ function deleteMessage( event )
 	return true
 end
 
+-------------------------------------------------------------------
+-- @todo Limpia los elementos para volver a mostrar los mensajes
+-------------------------------------------------------------------
 function refreshMessageAdmin()
 	
 	groupASvContent:removeSelf();
@@ -90,6 +101,9 @@ function refreshMessageAdmin()
 	
 end
 
+---------------------------------------------------
+-- @todo Marca el mensaje como leido
+---------------------------------------------------
 function markReadAdmin( event )
 	
 	event.target:removeEventListener('tap', markReadAdmin)
@@ -104,6 +118,9 @@ function markReadAdmin( event )
 	
 end
 
+---------------------------------------------------
+-- @todo Muestra los checkbox
+---------------------------------------------------
 function showCheckBox( event )
 	grpDelete.alpha = 1
 	grpBtnDelete.alpha = 1
@@ -111,6 +128,9 @@ function showCheckBox( event )
 	return true
 end
 
+---------------------------------------------------
+-- @todo Esconde los checkbox
+---------------------------------------------------
 function hideCheckBox( event )
 	grpDelete.alpha = 0
 	grpBtnDelete.alpha = 0
@@ -118,6 +138,9 @@ function hideCheckBox( event )
 	return true
 end
 
+---------------------------------------------------
+-- @todo Activa o desactiva los checkbox
+---------------------------------------------------
 function changeCheckBoxM( event )
 
 	local t = event.target
@@ -143,6 +166,10 @@ function changeCheckBoxM( event )
 	
 end
 
+---------------------------------------------------
+-- @todo Muestra el mensaje seleccionado
+-- Manda a la pantalla de message
+---------------------------------------------------
 function showMessage(event)
         local composer = require( "composer" )
 		
@@ -155,8 +182,14 @@ function showMessage(event)
                 params = { id = event.target.item.id }
             })
 		end
-    end
+end
 
+---------------------------------------------------------------------------------------
+-- @todo Crea los mensajes por interacion
+-- @params i interacion, posicion
+-- @params srvW anchura del scrollView
+-- @params posY posicion en Y donde se acomodara los elementos por interacion
+---------------------------------------------------------------------------------------
 function createMessages( i, srvW, posY )
 	
 	container[i] = display.newContainer( srvW, 110 )
@@ -248,6 +281,9 @@ function createMessages( i, srvW, posY )
 	
 end
 
+---------------------------------------------------
+-- @todo Contruye la carcasa de los mensajes
+---------------------------------------------------
 function buildMensageItems( event)
 
 	posY = 40
@@ -321,25 +357,6 @@ function buildMensageItems( event)
 		itemsAdmin[y].posc = y
 		
 		createMessages( y, srvW, posY )
-		
-		--[[local message = Message:new()
-		groupASvContent:insert(message)
-		message:build(itemsAdmin[y], srvW)
-		message.y = posY
-		message.id = itemsAdmin[y].idXref
-		message.posci = y
-		message.posY = posY
-		
-		noLeidoA[y] = display.newCircle( 315, posY + 30, 12 )
-		noLeidoA[y]:setFillColor( 0.5 )
-		noLeidoA[y].fill = gGreenBlue
-		groupASvContent:insert(noLeidoA[y])
-			
-		if itemsAdmin[y].leido == "0" then
-			message:addEventListener( 'tap', markReadAdmin )
-		else
-			noLeidoA[y].alpha = 0
-		end]]
 		   
 		posY = posY + 99
 		

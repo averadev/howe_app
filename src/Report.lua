@@ -50,6 +50,9 @@ function sendMessage( )
 	return true
 end
 
+--------------------------------------------------
+-- Muestra un mensaje cuando se envia la queja
+--------------------------------------------------
 function resultMessage( message )
 	NewAlert( true, 'Howe Residentes', message )
 	timeMarker = timer.performWithDelay( 1000, function()
@@ -60,6 +63,9 @@ function resultMessage( message )
 	end, 1 )
 end
 
+--------------------------------------
+-- Limpia los campos
+--------------------------------------
 function cleanTextFieldReport()
 	if txtSubject then
 		txtSubject.text = ""

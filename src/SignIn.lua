@@ -29,11 +29,17 @@ local btnSignIn
 -- FUNCIONES
 ---------------------------------------------------------------------------------
 
+--------------------------------------
+-- Esconde el teclado
+--------------------------------------
 function closeKeyboard()
 	native.setKeyboardFocus( nil )
 	return true
 end
 
+--------------------------------------
+-- 
+--------------------------------------
 function gotoScreen( event )
 	local t = event.target
 	t.alpha = .75
@@ -41,6 +47,9 @@ function gotoScreen( event )
 	return true
 end
 
+--------------------------------------
+-- Registra al usuario
+--------------------------------------
 function gotoSignIn( event )
 	btnSignIn:removeEventListener( 'tap', gotoSignIn )
 	btnSignIn.alpha = .75
@@ -72,6 +81,9 @@ function gotoSignIn( event )
 	return true
 end
 
+--------------------------------------
+-- Evento focus de los textField
+--------------------------------------
 function onTxtFocus( event )
 
     if ( event.phase == "began" ) then

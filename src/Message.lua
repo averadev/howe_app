@@ -135,8 +135,6 @@ function getBuildMessageItem( event )
 	iconReturn:translate( 65 , lastY + 25 )
 	iconReturn:setFillColor( unpack(cDarkBlue) )
 	svMessage:insert( iconReturn )
-	--iconReturn.height = 29
-	--iconReturn.width = 30
 	
 	local labelReturn = display.newText( {
         text = "Regresar a Mensajes",

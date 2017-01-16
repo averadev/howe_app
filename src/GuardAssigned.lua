@@ -82,7 +82,10 @@ function loadImageGuard()
 
 end
 
---llama al telefono del comercio
+
+---------------------------------------------------
+-- @todo --llama al telefono de la residencia
+---------------------------------------------------
 function callPhone( event )
 	system.openURL( "tel:" .. event.target.phone )
 end

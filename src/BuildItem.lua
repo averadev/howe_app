@@ -1,3 +1,8 @@
+---------------------------------------------------------------------------------
+-- Howe
+-- Alfredo Zum
+-- GeekBucket 2016
+---------------------------------------------------------------------------------
 
 local widget = require( "widget" )
 local Sprites = require('src.resources.Sprites')
@@ -84,7 +89,6 @@ function NewAlert( isOpen, title, message )
 end
 
 ---mensaje del login
-
 function getMessageSignIn(meessage, typeS)
 
 	if not grpMessageLogin then
@@ -141,6 +145,9 @@ function getMessageSignIn(meessage, typeS)
 	
 end
 
+---------------------------------------
+-- Elimina el mensaje de login
+---------------------------------------
 function deleteMessageSignIn()
 	if grpMessageLogin then
 		transition.to( grpMessageLogin, { y = 200, time = 300, transition = easing.inQuint, onComplete=function()
@@ -151,7 +158,9 @@ function deleteMessageSignIn()
 	
 end
 
---cargando
+---------------------------------------
+-- Cargando
+---------------------------------------
 function getLoadingLogin(poscY, titleLogin)
 	if not grpLoadingLogin then
 		
@@ -179,6 +188,9 @@ function getLoadingLogin(poscY, titleLogin)
 	end
 end
 
+---------------------------------------
+-- Elimina el cargando
+---------------------------------------
 function deleteLoadingLogin()
 	if grpLoadingLogin then
 		grpLoadingLogin:removeSelf()
@@ -186,6 +198,11 @@ function deleteLoadingLogin()
 	end
 end
 
+---------------------------------------
+-- Muestra mensaje de no encontrado
+-- @param obj objeto padre donde se insertara los elementos
+-- @param txtData texto
+---------------------------------------
 function getNoContent(obj, txtData)
 	if not grpLoading then
 		grpLoading = display.newGroup()
@@ -204,7 +221,9 @@ function getNoContent(obj, txtData)
 	end
 end
 
-
+---------------------------------------
+-- impide la expancion del tap
+---------------------------------------
 function sinAction( event )
 	return true
 end
