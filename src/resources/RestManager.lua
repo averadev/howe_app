@@ -716,6 +716,7 @@ local RestManager = {}
             return true
         end
         -- Do request
+        print(url)
         network.request( url, "GET", callback ) 
     end
 	
